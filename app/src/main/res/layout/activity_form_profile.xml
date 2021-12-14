@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="20dp"
+    android:orientation="vertical"
+    tools:context=".activity.FormProfileActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Edit Profil"
+        android:textSize="18dp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="135dp"
+        android:layout_height="95dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_baseline_account_circle_24"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp">
+
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:singleLine="true"
+            android:paddingLeft="10dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama "
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jenis Kelamin  "
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radioMale"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="Laki-laki"
+                android:paddingLeft="10dp"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/radioFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:hint="Perempuan"
+                android:paddingLeft="10dp"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp">
+
+        <SeekBar
+            android:id="@+id/seekBarAge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:max="100"
+            android:progress="0"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textSeekbarValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:textAlignment="center"
+            android:text="0"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Umur"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Hobi"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkboxPainting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:hint="Melukis"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/checkboxReading"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:hint="Membaca"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/checkboxSinging"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:hint="Menyanyi"
+                android:textColor="@color/grey"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="Batal"/>
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_weight="0.5"
+            android:background="@color/bg_kuning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"
+            android:text="OK"/>
+    </LinearLayout>
+</LinearLayout>
