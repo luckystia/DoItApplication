@@ -13,12 +13,17 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
+    //user
     @GET("api/user")
     Call<User> getUsers();
     @POST("api/register")
     Call<User> registerUser(@Body UserData user);
+    @POST("api/login")
+    Call<User> loginUser(@Body UserData user);
     @PUT("api/user/{id}")
     Call<User> updateUser(@Path("id") int id,  @Body User user);
     @DELETE("api/user/destroy/{id}")
     Call<User> deleteUser(@Path("id") int id);
+
+    //
 }

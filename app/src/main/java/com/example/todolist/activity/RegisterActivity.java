@@ -1,5 +1,6 @@
 package com.example.todolist.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Drawable backgroundEmpty, backgroundFilled;
     private boolean isAllFieldsChecked = false;
     private Drawable img;
+    TextView loginUrl;
     private String emailPattern, usernameValid;
     private ApiService apiService;
     private CustomDIalog customDIalog;
@@ -37,15 +40,17 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_activity);
+        setContentView(R.layout.activity_register);
         nameInput = findViewById(R.id.nameInput);
         emailInput = findViewById(R.id.emailInput);
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
         confirmPwdInput = findViewById(R.id.confirmPwdInput);
         btnSubmit = findViewById(R.id.submitBtn);
+        loginUrl = findViewById(R.id.loginUrl);
         apiService = ApiUtils.getUsetService();
         customDIalog = new CustomDIalog(RegisterActivity.this);
+
         //drwaable
         img = ContextCompat.getDrawable(RegisterActivity.this, R.drawable.icon_success);
         img.setBounds(0, 0, 70, 70);
@@ -69,7 +74,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (passwordInput.getText().toString().trim().matches(confirmPwdInput.getText().toString()) && s.length() != 0) {
                     confirmPwdInput.setCompoundDrawables(null, null, img, null);
-                    // or
 
                 } else if (s.length() > 12 || s.length() < 6) {
                     passwordInput.setCompoundDrawables(null, null, null, null);
@@ -94,12 +98,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (confirmPwdInput.getText().toString().trim().matches(passwordInput.getText().toString()) && s.length() != 0) {
                     confirmPwdInput.setCompoundDrawables(null, null, img, null);
-                    // or
-
                 } else {
                     confirmPwdInput.setCompoundDrawables(null, null, null, null);
-
-
                 }
             }
 
@@ -113,9 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         //submit button
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnSubmit.setOnClickListener(v -> {
 
                 isAllFieldsChecked = CheckAllFields();
                 if (isAllFieldsChecked) {
@@ -129,7 +127,14 @@ public class RegisterActivity extends AppCompatActivity {
                     register(user);
 
                 }
-            }
+
+        });
+
+        //loginUrl
+        loginUrl.setOnClickListener(v -> {
+                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
         });
 
     }
@@ -240,7 +245,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (form.getText().toString().trim().matches(validation) && s.length() != 0) {
                     form.setCompoundDrawables(null, null, img, null);
-                    // or
 
                 } else {
                     form.setCompoundDrawables(null, null, null, null);

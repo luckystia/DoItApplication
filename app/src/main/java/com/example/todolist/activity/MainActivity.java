@@ -22,6 +22,7 @@ import com.example.todolist.R;
 import com.example.todolist.adapter.RecyclerItemClickListener;
 import com.example.todolist.adapter.TaskAdapter;
 import com.example.todolist.helper.DBHelper;
+import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.TaskData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,6 +31,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
     RecyclerView recyclerView;
     AlertDialog.Builder dialog;
     ArrayList<TaskData> itemList = new ArrayList<>();
@@ -49,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        sessionManager = new SessionManager(MainActivity.this);
+
+        //check is login
+        if (sessionManager.isLoggedIn() == false){
+            moveToLogin();
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         imageEditProfile = findViewById(R.id.imageEditProfile);
@@ -103,6 +111,13 @@ public class MainActivity extends AppCompatActivity {
         setUserData();
         getAllData();
 
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
     public void setUserData() {

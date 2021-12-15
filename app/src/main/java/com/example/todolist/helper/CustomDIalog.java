@@ -3,15 +3,16 @@ package com.example.todolist.helper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.todolist.R;
+import com.example.todolist.activity.LoginActivity;
+import com.example.todolist.activity.MainActivity;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -31,7 +32,7 @@ public class CustomDIalog {
             GifImageView imageView = dialog.findViewById(R.id.animateIcon);
             TextView messages = dialog.findViewById(R.id.messages);
             Button btnDone = dialog.findViewById(R.id.btnDone);
-            if (message.equals("success")) {
+            if (message.equals("success") || message.equals("true")) {
 //                prvent cancel the dialog
                 dialog.setCancelable(false);
                 dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -43,24 +44,33 @@ public class CustomDIalog {
                 });
 
                 imageView.setBackgroundResource(R.drawable.check_mark);
-                messages.setText("Registration is success. Now You Can Login Using Your Account");
+                if (message.equals("success")) {
+                    messages.setText("Registration is success. Now You Can Login Using Your Account");
+                    btnDone.setOnClickListener(v -> {
+                        Intent intent = new Intent(activity, LoginActivity.class);
+                        activity.startActivity(intent);
+                        activity.finish();
+
+                    });
+                } else if (message.equals("true")) {
+                    messages.setText("Login Success. Click the button below to go to the main page! ");
+                    btnDone.setOnClickListener(v -> {
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        activity.startActivity(intent);
+                        activity.finish();
+
+                    });
+                }
                 dialog.setCanceledOnTouchOutside(false);
                 btnDone.setText("Done");
-                btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(activity, "menuju halaman login", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
             } else {
                 imageView.setBackgroundResource(R.drawable.error_animation);
                 messages.setText(message);
                 btnDone.setText("Close");
-                btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismissDialog();
-                    }
+                btnDone.setOnClickListener(v -> {
+                    dismissDialog();
+
                 });
             }
         } else if (type.equals("loading")) {

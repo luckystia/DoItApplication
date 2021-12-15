@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.todolist.R;
 import com.example.todolist.helper.DBHelper;
+import com.example.todolist.helper.SessionManager;
 
 import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
+    private SessionManager sessionManager;
     TextView textName, textAge, textGender, textHobby;
-    Button buttonEditProfile, buttonBack;
+    Button buttonEditProfile, buttonBack, buttonLogout;
     DBHelper SQLite = new DBHelper(this);
 
     @Override
@@ -23,11 +25,25 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        sessionManager = new SessionManager(ProfileActivity.this);
+
         textName = findViewById(R.id.textName);
         textGender = findViewById(R.id.textGender);
         textAge = findViewById(R.id.textAge);
         textHobby = findViewById(R.id.textHobby);
         buttonEditProfile = findViewById(R.id.btn_edit_profile);
+        buttonLogout = findViewById(R.id.btnLogout);
+
+        buttonLogout.setOnClickListener(v ->{
+            sessionManager.logout();
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+        });
         buttonEditProfile.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, FormProfileActivity.class));
         });
