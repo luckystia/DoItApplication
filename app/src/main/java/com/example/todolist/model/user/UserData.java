@@ -19,6 +19,13 @@ public class UserData {
 	@SerializedName("username")
 	private String username;
 
+	@SerializedName("notif_token")
+	private String notif_token;
+
+	public void setNotif_token(String notif_token){
+		this.notif_token = notif_token;
+	}
+
 	public void setPassword(String password){
 		this.password = password;
 	}

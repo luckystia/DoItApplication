@@ -5,33 +5,39 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.todolist.R;
-import com.example.todolist.remote.ApiService;
-import com.example.todolist.remote.ApiUtils;
 import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.model.user.User;
 import com.example.todolist.model.user.UserData;
+import com.example.todolist.remote.ApiService;
+import com.example.todolist.remote.ApiUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
+    private final UserData user = new UserData();
+    TextView loginUrl;
     private EditText nameInput, emailInput, usernameInput, passwordInput, confirmPwdInput;
     private Button btnSubmit;
     private Drawable backgroundEmpty, backgroundFilled;
     private boolean isAllFieldsChecked = false;
     private Drawable img;
-    TextView loginUrl;
     private String emailPattern, usernameValid;
     private ApiService apiService;
     private CustomDIalog customDIalog;
@@ -111,30 +117,30 @@ public class RegisterActivity extends AppCompatActivity {
                 // other stuffs
             }
         });
+        getCurrentFirebaseToken();
 
         //submit button
         btnSubmit.setOnClickListener(v -> {
 
-                isAllFieldsChecked = CheckAllFields();
-                if (isAllFieldsChecked) {
-                    customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
-                    UserData user = new UserData();
-                    user.setName(nameInput.getText().toString());
-                    user.setEmail(emailInput.getText().toString());
-                    user.setUsername(usernameInput.getText().toString());
-                    user.setPassword(passwordInput.getText().toString());
-                    user.setPasswordConfirmation(confirmPwdInput.getText().toString());
-                    register(user);
+            isAllFieldsChecked = CheckAllFields();
+            if (isAllFieldsChecked) {
+                customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
 
-                }
+                user.setName(nameInput.getText().toString());
+                user.setEmail(emailInput.getText().toString());
+                user.setUsername(usernameInput.getText().toString());
+                user.setPassword(passwordInput.getText().toString());
+                user.setPasswordConfirmation(confirmPwdInput.getText().toString());
+                register(user);
+            }
 
         });
 
         //loginUrl
         loginUrl.setOnClickListener(v -> {
-                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
         });
 
     }
@@ -261,5 +267,21 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void getCurrentFirebaseToken() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "getInstanceId failed", task.getException());
+                            return;
+                        }
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        user.setNotif_token(token);
+
+                    }
+                });
+    }
 
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "696344153920",
+    "project_id": "doitapp-705b6",
+    "storage_bucket": "doitapp-705b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696344153920:android:a99ea4e098218c946d34a5",
+        "android_client_info": {
+          "package_name": "com.example.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696344153920-maggq2ij9cg4oq0bidopt8365kv63qsb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCI5sqI3MtjOlLP93K8YqSHhWFlkeg-Hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696344153920-maggq2ij9cg4oq0bidopt8365kv63qsb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
