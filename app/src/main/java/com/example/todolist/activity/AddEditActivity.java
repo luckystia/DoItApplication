@@ -30,7 +30,7 @@ public class AddEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit);
+        setContentView(R.layout.activity_add_edit_remake);
         title = findViewById(R.id.title);
         txt_id = findViewById(R.id.txt_id);
         txt_name = findViewById(R.id.txt_name);

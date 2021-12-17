@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_white"
+    tools:context="com.example.todolist.activity.AddEditActivity">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="102dp"
+        android:background="@drawable/group_9"
+        android:paddingLeft="20dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="12dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:background="@null"
+            app:tint="@color/white" />
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="New To Do List"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:textColor="@color/white"
+            android:textSize="22sp"/>
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_form"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <TextView
+            android:id="@+id/judul"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Judul"
+            android:textColor="#7E7E7E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/txt_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:visibility="gone"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="20dp"
+            android:singleLine="true"
+            android:textColor="#0A62FF"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/judul" />
+
+        <TextView
+            android:id="@+id/tanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Tanggal"
+            android:textColor="#7E7E7E"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_name" />
+
+        <EditText
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_form"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="20dp"
+            android:singleLine="true"
+            android:textColor="#0A62FF"
+            android:textSize="12sp"
+            android:drawableEnd="@drawable/icon_date"
+            app:layout_constraintTop_toBottomOf="@+id/tanggal" />
+
+
+        <TextView
+            android:id="@+id/isi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:layout_marginTop="18dp"
+            android:text="Judul"
+            android:textColor="#7E7E7E"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_date" />
+
+        <EditText
+            android:id="@+id/txt_isi"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/rounded_form"
+            android:fontFamily="@font/poppins_semi_bold"
+            android:inputType="text"
+            android:padding="20dp"
+            android:textColor="#0A62FF"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/isi" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="#0A62FF"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:padding="20dp"
+        android:text="Add Task"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_form" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/black"
+        android:fontFamily="@font/poppins_semi_bold"
+        android:padding="20dp"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_submit"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
