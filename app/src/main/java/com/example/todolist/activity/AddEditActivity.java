@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class AddEditActivity extends AppCompatActivity {
     TextView title;
     EditText txt_id, txt_name, txt_date, txt_isi;
     Button btn_submit, btn_cancel;
+    ImageView img_back;
     DBHelper SQLite = new DBHelper(this);
     String id, name, isi, date;
     Calendar myCalendar = Calendar.getInstance();
@@ -37,7 +39,7 @@ public class AddEditActivity extends AppCompatActivity {
         txt_date = findViewById(R.id.txt_date);
         txt_isi = findViewById(R.id.txt_isi);
         btn_submit = findViewById(R.id.btn_submit);
-        btn_cancel = findViewById(R.id.btn_cancel);
+        img_back = findViewById(R.id.img_back);
         id = getIntent().getStringExtra(MainActivity.TAG_ID);
         name = getIntent().getStringExtra(MainActivity.TAG_NAME);
         isi = getIntent().getStringExtra(MainActivity.TAG_ISI);
