@@ -12,7 +12,7 @@
     </item>
 
     <item android:id="@+id/about_app"
-        android:title="Tentang Aplikasi"
+        android:title="Tentang Apli"
         android:icon="@drawable/ic_about_app">
 
     </item>
