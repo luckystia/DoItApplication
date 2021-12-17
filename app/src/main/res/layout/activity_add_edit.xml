@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.AddEditActivity">
+    tools:context="com.example.todolist.activity.AddEditActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
