@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:paddingStart="15dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/rounded_form">
 
     <TextView
