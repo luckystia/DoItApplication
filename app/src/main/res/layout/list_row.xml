@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:paddingStart="15dp"
+    android:background="@drawable/rounded_form">
 
     <TextView
         android:id="@+id/id"
@@ -24,6 +26,7 @@
         android:layout_marginBottom="5dp"
         android:text="Memancing"
         android:textSize="16dp"
+        android:fontFamily="@font/poppins_regular"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -31,18 +34,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal : "
-            android:textSize="16dp" />
-
+            android:background="@drawable/date">
+        </ImageView>
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20-20-2020"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:paddingStart="5dp"
+            android:fontFamily="@font/poppins_regular"/>
     </LinearLayout>
-
 </LinearLayout>
