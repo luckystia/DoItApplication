@@ -29,6 +29,7 @@ public class SessionManager {
     public void createLoginSession(UserData userData){
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(NAME,userData.getName());
+        editor.putInt(ID,userData.getId());
         editor.putString(EMAIL,userData.getEmail());
         editor.putString(USERNAME,userData.getUsername());
         editor.commit();

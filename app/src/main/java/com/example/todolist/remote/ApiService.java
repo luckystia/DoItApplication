@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -20,10 +21,9 @@ public interface ApiService {
     Call<User> registerUser(@Body UserData user);
     @POST("api/login")
     Call<User> loginUser(@Body UserData user);
-    @PUT("api/user/{id}")
-    Call<User> updateUser(@Path("id") int id,  @Body User user);
+    @PATCH("api/user/{id}")
+    Call<User> updateUser(@Path("id") int id,  @Body UserData user);
     @DELETE("api/user/destroy/{id}")
     Call<User> deleteUser(@Path("id") int id);
 
-    //
 }

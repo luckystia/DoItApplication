@@ -5,26 +5,42 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.todolist.R;
 import com.example.todolist.activity.MainActivity;
+import com.example.todolist.activity.RegisterActivity;
+import com.example.todolist.model.user.User;
+import com.example.todolist.model.user.UserData;
+import com.example.todolist.remote.ApiService;
+import com.example.todolist.remote.ApiUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FirebaseServices extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private ApiService apiService = ApiUtils.getUsetService();
 
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Log.d("token", "Refreshed token: " + s);
+        UserData userData = new UserData();
+        userData.setNotif_token(s.toString());
+
     }
 
     // [START receive_message]

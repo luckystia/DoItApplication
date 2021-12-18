@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserData {
 
+	private int id;
+
 	@SerializedName("password")
 	private String password;
 
@@ -21,6 +23,14 @@ public class UserData {
 
 	@SerializedName("notif_token")
 	private String notif_token;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public void setNotif_token(String notif_token){
 		this.notif_token = notif_token;
