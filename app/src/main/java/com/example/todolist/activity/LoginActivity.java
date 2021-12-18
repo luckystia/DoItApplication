@@ -5,11 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -20,6 +22,10 @@ import com.example.todolist.model.user.User;
 import com.example.todolist.model.user.UserData;
 import com.example.todolist.remote.ApiService;
 import com.example.todolist.remote.ApiUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                         sessionManager = new SessionManager(LoginActivity.this);
                         UserData userData = response.body().getData();
                         sessionManager.createLoginSession(userData);
+                        getCurrentFirebaseToken(userData.getId());
                     }
 
                 }
@@ -186,5 +193,37 @@ public class LoginActivity extends AppCompatActivity {
                 // other stuffs
             }
         });
+    }
+
+    private void getCurrentFirebaseToken(int idUser) {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        UserData userData = new UserData();
+                        userData.setNotif_token(token);
+
+                        Call<User> call = apiService.updateNotifToken(idUser, userData);
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                Log.d("refreshToken", "Berhasil");
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call1, Throwable throwable) {
+                                Log.d("refreshToken", "Gagal");
+
+                            }
+                        });
+                    }
+                });
     }
 }

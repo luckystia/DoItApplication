@@ -38,9 +38,6 @@ public class FirebaseServices extends FirebaseMessagingService {
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Log.d("token", "Refreshed token: " + s);
-        UserData userData = new UserData();
-        userData.setNotif_token(s.toString());
-
     }
 
     // [START receive_message]

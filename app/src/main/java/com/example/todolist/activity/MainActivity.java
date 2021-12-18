@@ -67,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 //        imageEditProfile = findViewById(R.id.imageEditProfile);
-        imageEditProfile.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-        });
+//        imageEditProfile.setOnClickListener(v -> {
+//            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+//        });
         txtUsername = findViewById(R.id.txt_username);
         txtUsername.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));

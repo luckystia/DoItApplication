@@ -23,6 +23,8 @@ public interface ApiService {
     Call<User> loginUser(@Body UserData user);
     @PATCH("api/user/{id}")
     Call<User> updateUser(@Path("id") int id,  @Body UserData user);
+    @PATCH("api/user/api-update/{id}")
+    Call<User> updateNotifToken(@Path("id") int id,  @Body UserData user);
     @DELETE("api/user/destroy/{id}")
     Call<User> deleteUser(@Path("id") int id);
 
