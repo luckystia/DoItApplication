@@ -269,18 +269,18 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void getCurrentFirebaseToken() {
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "getInstanceId failed", task.getException());
-                            return;
-                        }
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        user.setNotif_token(token);
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("TAG", "getInstanceId failed", task.getException());
+                    return;
+                }
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+                user.setNotif_token(token);
 //                        Toast.makeText(RegisterActivity.this, "berhasil", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+        });
     }
 
 }
