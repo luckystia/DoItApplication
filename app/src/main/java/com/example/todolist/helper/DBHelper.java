@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     static final String DATABASE_NAME = "catatan.db";
 
     public static final String TABLE_USER = "user";
@@ -20,9 +20,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AGE = "age";
     public static final String COLUMN_HOBBY = "hobby";
 
-    public static final String TABLE_TASK = "task";
-    public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_ISI = "isi";
+    public static final String TABLE_TASK = "tasks";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_DATE = "date";
 
     public DBHelper(Context context) {
@@ -33,8 +33,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_TASK_TABLE = "CREATE TABLE " + TABLE_TASK + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY autoincrement, " +
-                COLUMN_NAME + " TEXT NOT NULL, " +
-                COLUMN_ISI + " TEXT NOT NULL," +
+                COLUMN_TITLE + " TEXT NOT NULL, " +
+                COLUMN_CONTENT + " TEXT NOT NULL," +
                 COLUMN_DATE + " TEXT NOT NULL" +
                 " )";
         db.execSQL(SQL_CREATE_TASK_TABLE);
@@ -105,8 +105,8 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(COLUMN_ID, cursor.getString(0));
-                map.put(COLUMN_NAME, cursor.getString(1));
-                map.put(COLUMN_ISI, cursor.getString(2));
+                map.put(COLUMN_TITLE, cursor.getString(1));
+                map.put(COLUMN_CONTENT, cursor.getString(2));
                 map.put(COLUMN_DATE, cursor.getString(3));
                 wordList.add(map);
             } while (cursor.moveToNext());
@@ -117,7 +117,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertTask(String name, String date, String isi) {
         SQLiteDatabase database = this.getWritableDatabase();
-        String queryValues = "INSERT INTO " + TABLE_TASK + " (name, isi, date) " +
+        String queryValues = "INSERT INTO " + TABLE_TASK + " (title, content, date) " +
                 "VALUES ('" + name + "','" + isi + "','" + date + "')";
         database.execSQL(queryValues);
         database.close();
@@ -126,9 +126,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void updateTask(int id, String name, String date, String isi) {
         SQLiteDatabase database = this.getWritableDatabase();
         String updateQuery = "UPDATE " + TABLE_TASK + " SET "
-                + COLUMN_NAME + "='" + name + "', "
+                + COLUMN_TITLE + "='" + name + "', "
                 + COLUMN_DATE + "='" + date + "', "
-                + COLUMN_ISI + "='" + isi + "'"
+                + COLUMN_CONTENT + "='" + isi + "'"
                 + " WHERE " + COLUMN_ID + "=" + "'" + id + "'";
         database.execSQL(updateQuery);
         database.close();

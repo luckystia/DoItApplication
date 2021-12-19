@@ -30,7 +30,7 @@ public class AddEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_remake);
+        setContentView(R.layout.activity_add_edit);
         title = findViewById(R.id.title);
         txt_id = findViewById(R.id.txt_id);
         txt_name = findViewById(R.id.txt_name);
@@ -39,8 +39,8 @@ public class AddEditActivity extends AppCompatActivity {
         btn_submit = findViewById(R.id.btn_submit);
         btn_cancel = findViewById(R.id.btn_cancel);
         id = getIntent().getStringExtra(MainActivity.TAG_ID);
-        name = getIntent().getStringExtra(MainActivity.TAG_NAME);
-        isi = getIntent().getStringExtra(MainActivity.TAG_ISI);
+        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
+        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
         if (id == null || id == "") {
             title.setText("Tambah Data");

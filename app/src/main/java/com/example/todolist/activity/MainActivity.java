@@ -23,17 +23,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todolist.R;
 import com.example.todolist.adapter.RecyclerItemClickListener;
 import com.example.todolist.adapter.TaskAdapter;
+import com.example.todolist.adapter.TaskAdapterApi;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
+import com.example.todolist.model.GetTask;
+import com.example.todolist.model.Task;
 import com.example.todolist.model.TaskData;
+import com.example.todolist.remote.ApiClientLocal;
+import com.example.todolist.remote.ApiService;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,14 +51,20 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog.Builder dialog;
     ArrayList<TaskData> itemList = new ArrayList<>();
     TaskAdapter adapter;
+    TaskAdapterApi taskAdapterApi;
     DBHelper SQLite = new DBHelper(this);
     ImageView imageEditProfile;
     TextView txtUsername;
     FloatingActionButton fab;
+
+    ApiService apiService;
+
     public static final String TAG_ID = "id";
-    public static final String TAG_NAME = "name";
+    public static final String TAG_TITLE = "title";
     public static final String TAG_DATE = "date";
-    public static final String TAG_ISI = "isi";
+    public static final String TAG_CONTENT = "content";
+
+    public static MainActivity ma;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -91,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
                         dialog.setPositiveButton("Edit", (d, id1) -> {
                             Intent intent = new Intent(MainActivity.this, AddEditActivity.class);
                             intent.putExtra(TAG_ID, idx);
-                            intent.putExtra(TAG_NAME, name);
+                            intent.putExtra(TAG_TITLE, name);
                             intent.putExtra(TAG_DATE, date);
-                            intent.putExtra(TAG_ISI, isi);
+                            intent.putExtra(TAG_CONTENT, isi);
                             startActivity(intent);
                         });
                         dialog.setNegativeButton("Hapus", (d, id12) -> {
@@ -117,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
         });
         setUserData();
         getAllData();
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(adapter);
+//        apiService = ApiClientLocal.getClient().create(ApiService.class);
+//        ma=this;
+//        refresh();
 
     }
 
@@ -142,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < row.size(); i++) {
             TaskData taskData = new TaskData();
             taskData.setId(row.get(i).get(TAG_ID));
-            taskData.setJudul(row.get(i).get(TAG_NAME));
-            taskData.setIsi(row.get(i).get(TAG_ISI));
+            taskData.setJudul(row.get(i).get(TAG_TITLE));
+            taskData.setIsi(row.get(i).get(TAG_CONTENT));
             taskData.setDate(row.get(i).get(TAG_DATE));
             itemList.add(taskData);
         }
@@ -186,6 +207,26 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refresh() {
+        Call<GetTask> taskCall = apiService.getTasks();
+        taskCall.enqueue(new Callback<GetTask>() {
+            @Override
+            public void onResponse(Call<GetTask> call, Response<GetTask>
+              response) {
+                List<Task> TaskList = response.body().getListDataTask();
+                Log.d("Retrofit Get", "Jumlah data Task: " +
+                  String.valueOf(TaskList.size()));
+                taskAdapterApi = new TaskAdapterApi(TaskList);
+                recyclerView.setAdapter(taskAdapterApi);
+            }
+
+            @Override
+            public void onFailure(Call<GetTask> call, Throwable t) {
+                Log.e("Retrofit Get", t.toString());
+            }
+        });
     }
 
 //    private void getCurrentFirebaseToken(){
