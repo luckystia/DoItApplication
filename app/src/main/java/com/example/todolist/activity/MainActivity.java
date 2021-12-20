@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        getCurrentFirebaseToken();
         //check is login
-        if (sessionManager.isLoggedIn() == false){
+        if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()){
             moveToLogin();
         }
         setSupportActionBar(toolbar);

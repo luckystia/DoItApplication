@@ -19,8 +19,8 @@ import java.util.HashMap;
 
 import static com.example.todolist.activity.MainActivity.TAG_DATE;
 import static com.example.todolist.activity.MainActivity.TAG_ID;
-import static com.example.todolist.activity.MainActivity.TAG_CONTENT;
-import static com.example.todolist.activity.MainActivity.TAG_TITLE;
+//import static com.example.todolist.activity.MainActivity.TAG_CONTENT;
+//import static com.example.todolist.activity.MainActivity.TAG_TITLE;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private ArrayList<TaskData> items;
