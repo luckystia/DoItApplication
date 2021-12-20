@@ -16,6 +16,7 @@
     <color name="teal_700">#72bf44</color>
     <color name="grey">#696A68</color>
     <color name="oranye">#FBD127</color>
-    <color name="bg_kuning">#F7DC6F </color>
+    <color name="bg_kuning">#F7DC6F</color>
+    <color name="bg_white">#F5F7FB</color>
 
 </resources>

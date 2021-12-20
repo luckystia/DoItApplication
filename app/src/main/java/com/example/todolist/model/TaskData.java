@@ -1,6 +1,10 @@
 package com.example.todolist.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class TaskData {
+
+
     private String id, judul, isi, date;
 
     public TaskData() {

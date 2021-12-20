@@ -39,8 +39,8 @@ public class AddEditActivity extends AppCompatActivity {
         btn_submit = findViewById(R.id.btn_submit);
         btn_cancel = findViewById(R.id.btn_cancel);
         id = getIntent().getStringExtra(MainActivity.TAG_ID);
-        name = getIntent().getStringExtra(MainActivity.TAG_NAME);
-        isi = getIntent().getStringExtra(MainActivity.TAG_ISI);
+        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
+        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
         if (id == null || id == "") {
             title.setText("Tambah Data");
