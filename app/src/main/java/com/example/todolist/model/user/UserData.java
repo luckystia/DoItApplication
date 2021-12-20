@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserData {
 
-	private int id;
+	private String loggedToken;
 
 	@SerializedName("password")
 	private String password;
@@ -15,21 +15,14 @@ public class UserData {
 	@SerializedName("name")
 	private String name;
 
-	@SerializedName("email")
-	private String email;
-
 	@SerializedName("username")
 	private String username;
 
 	@SerializedName("notif_token")
 	private String notif_token;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public String getLoggedToken() {
+		return loggedToken;
 	}
 
 	public void setNotif_token(String notif_token){
@@ -58,14 +51,6 @@ public class UserData {
 
 	public String getName(){
 		return name;
-	}
-
-	public void setEmail(String email){
-		this.email = email;
-	}
-
-	public String getEmail(){
-		return email;
 	}
 
 	public void setUsername(String username){

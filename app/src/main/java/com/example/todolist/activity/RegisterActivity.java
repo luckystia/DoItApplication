@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
     private final UserData user = new UserData();
     TextView loginUrl;
-    private EditText nameInput, emailInput, usernameInput, passwordInput, confirmPwdInput;
+    private EditText nameInput, usernameInput, passwordInput, confirmPwdInput;
     private Button btnSubmit;
     private Drawable backgroundEmpty, backgroundFilled;
     private boolean isAllFieldsChecked = false;
@@ -48,7 +48,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         nameInput = findViewById(R.id.nameInput);
-        emailInput = findViewById(R.id.emailInput);
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
         confirmPwdInput = findViewById(R.id.confirmPwdInput);
@@ -62,18 +61,15 @@ public class RegisterActivity extends AppCompatActivity {
         img.setBounds(0, 0, 70, 70);
 
         //email validation
-        emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        usernameValid = "^[A-Za-z][A-Za-z0-9]{5,}$";
+        usernameValid = "^[A-Za-z][A-Za-z0-9]{5,10}$";
 
         //set Backgorund on fill
         setBackgroundFilled(nameInput);
-        setBackgroundFilled(emailInput);
         setBackgroundFilled(usernameInput);
         setBackgroundFilled(passwordInput);
         setBackgroundFilled(confirmPwdInput);
 
         //custom validation
-        customValidationForm(emailInput, emailPattern);
         customValidationForm(usernameInput, usernameValid);
         passwordInput.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -127,7 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
                 customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
 
                 user.setName(nameInput.getText().toString());
-                user.setEmail(emailInput.getText().toString());
                 user.setUsername(usernameInput.getText().toString());
                 user.setPassword(passwordInput.getText().toString());
                 user.setPasswordConfirmation(confirmPwdInput.getText().toString());
@@ -210,25 +205,18 @@ public class RegisterActivity extends AppCompatActivity {
             nameInput.setError("This field is required");
             return false;
         }
-        if (emailInput.getText().toString().trim().length() == 0) {
-            emailInput.setError("This field is required");
-            return false;
-        } else if (!emailInput.getText().toString().trim().matches(emailPattern)) {
-            emailInput.setError("Email format is invalid");
-            return false;
-        }
         if (usernameInput.getText().toString().trim().length() == 0) {
             usernameInput.setError("This field is required");
             return false;
         } else if (!usernameInput.getText().toString().trim().matches(usernameValid)) {
-            usernameInput.setError("Username can't have a blank space & have minimal 6 character");
+            usernameInput.setError("Username can't have a blank space & have minimal 6 characters and max 11 charaters");
             return false;
         }
         if (passwordInput.getText().toString().trim().length() == 0) {
             passwordInput.setError("This field is required");
             return false;
-        } else if (passwordInput.getText().toString().trim().length() > 12 || passwordInput.getText().toString().trim().length() < 6) {
-            passwordInput.setError("Password Minimal have 6 & Maximal have 12 character");
+        } else if (passwordInput.getText().toString().trim().length() < 6) {
+            passwordInput.setError("Password Minimal have 6");
             return false;
         }
         if (confirmPwdInput.getText().toString().trim().length() == 0) {
@@ -237,8 +225,8 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!confirmPwdInput.getText().toString().trim().matches(passwordInput.getText().toString())) {
             confirmPwdInput.setError("Password not match");
             return false;
-        } else if (confirmPwdInput.getText().toString().trim().length() > 12 || confirmPwdInput.getText().toString().trim().length() < 6) {
-            confirmPwdInput.setError("Password Minimal have 6 & Maksimal have 12 character");
+        } else if (confirmPwdInput.getText().toString().trim().length() < 6) {
+            confirmPwdInput.setError("Password Minimal have 6");
             return false;
         }
         // after all validation return true.

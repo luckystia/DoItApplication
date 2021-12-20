@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                         sessionManager = new SessionManager(LoginActivity.this);
                         UserData userData = response.body().getData();
                         sessionManager.createLoginSession(userData);
-                        getCurrentFirebaseToken(userData.getId());
+                        getCurrentFirebaseToken(userData.getLoggedToken());
                     }
 
                 }
@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void getCurrentFirebaseToken(int idUser) {
+    private void getCurrentFirebaseToken(String tokenLogin) {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                         UserData userData = new UserData();
                         userData.setNotif_token(token);
 
-                        Call<User> call = apiService.updateNotifToken(idUser, userData);
+                        Call<User> call = apiService.updateNotifToken(tokenLogin, userData);
                         call.enqueue(new Callback<User>() {
                             @Override
                             public void onResponse(Call<User> call, Response<User> response) {

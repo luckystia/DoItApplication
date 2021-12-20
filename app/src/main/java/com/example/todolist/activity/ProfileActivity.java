@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.todolist.R;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
+import com.example.todolist.remote.ApiService;
+import com.example.todolist.remote.ApiUtils;
 
 import java.util.HashMap;
 
@@ -26,7 +28,6 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         sessionManager = new SessionManager(ProfileActivity.this);
-
         textName = findViewById(R.id.textName);
         textGender = findViewById(R.id.textGender);
         textAge = findViewById(R.id.textAge);
@@ -36,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         buttonLogout.setOnClickListener(v ->{
             sessionManager.logout();
+
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                     Intent.FLAG_ACTIVITY_CLEAR_TASK |
