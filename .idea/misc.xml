@@ -3,6 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2564814814814815" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_add_edit.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_add_edit2.xml" value="0.21388888888888888" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_add_edit_remake.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_add_edit_remake2.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_form_profile.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_profile.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/alert_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/custom_dialog_loading.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/info_layout_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/WISNU/Documents/ProjectAndroid/DoItApplication/app/src/main/res/layout/list_row.xml" value="0.25" />
         <entry key="app/src/main/res/font/font.xml" value="0.2484375" />
         <entry key="app/src/main/res/layout/activity_add_edit.xml" value="0.30833333333333335" />
         <entry key="app/src/main/res/layout/activity_add_edit_remake.xml" value="0.2140625" />

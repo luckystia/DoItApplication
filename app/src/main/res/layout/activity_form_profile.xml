@@ -186,14 +186,15 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:text="Batal"/>
+
         <Button
             android:id="@+id/btnSave"
-            android:layout_weight="0.5"
-            android:background="@color/bg_kuning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textColor="@color/black"
-            android:text="OK"/>
+            android:layout_weight="0.5"
+            android:background="#0A62FF"
+            android:text="OK"
+            android:textColor="@color/black" />
     </LinearLayout>
 </LinearLayout>
