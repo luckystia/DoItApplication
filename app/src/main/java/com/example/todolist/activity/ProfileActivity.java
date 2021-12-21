@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
     private SessionManager sessionManager;
-    TextView textName, textAge, textGender, textHobby;
+    TextView textName, textUsername;
     Button buttonEditProfile, buttonBack, buttonLogout;
     DBHelper SQLite = new DBHelper(this);
 
@@ -29,12 +29,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(ProfileActivity.this);
         textName = findViewById(R.id.textName);
-        textGender = findViewById(R.id.textGender);
-        textAge = findViewById(R.id.textAge);
-        textHobby = findViewById(R.id.textHobby);
+        textUsername = findViewById(R.id.textUsername);
         buttonEditProfile = findViewById(R.id.btn_edit_profile);
         buttonLogout = findViewById(R.id.btnLogout);
 
+        textName.setText(sessionManager.getUserDetail().get("name"));
+        textUsername.setText(sessionManager.getUserDetail().get("name"));
+        
         buttonLogout.setOnClickListener(v ->{
             sessionManager.logout();
 
@@ -55,13 +56,13 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setUserData();
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        setUserData();
+
     }
 
     @Override
@@ -70,16 +71,5 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    public void setUserData() {
-        HashMap<String, String> row = SQLite.getUser();
-        String name = row.get("username") == null ? "" : row.get("username");
-        String gender = row.get("gender") == null ? "" : row.get("gender");
-        String age = row.get("age") == null ? "" : row.get("age");
-        String hobby = row.get("hobby") == null ? "" : row.get("hobby");
 
-        textName.setText("Nama : " + name);
-        textGender.setText("Jenis Kelamin : " + gender);
-        textAge.setText("Umur : " + age);
-        textHobby.setText("Hobi : " + hobby);
-    }
 }

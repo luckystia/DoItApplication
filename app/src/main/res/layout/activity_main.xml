@@ -19,7 +19,7 @@
             android:layout_marginTop="130dp"
             android:fontFamily="@font/poppins_regular"
             android:paddingStart="30dp"
-            android:text="History"
+            android:text="Task List"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -33,9 +33,11 @@
         android:background="@drawable/headtop"
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="@android:color/white">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -51,6 +53,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -62,11 +65,11 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Hello, Lina"
                     android:paddingStart="15dp"
+                    android:text="Hello, Lina"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -80,7 +83,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="170dp"
         android:layout_weight="1"
-        android:paddingStart="30dp"/>
+        android:paddingStart="30dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatPlus"
@@ -92,5 +95,5 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_baseline_add_24"
-        app:backgroundTint="@color/bg_kuning" />
+        app:backgroundTint="#0A62FF" />
 </RelativeLayout>

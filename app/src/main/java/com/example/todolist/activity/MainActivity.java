@@ -5,13 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -26,18 +24,17 @@ import com.example.todolist.adapter.TaskAdapter;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.TaskData;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SessionManager sessionManager;
+    public static final String TAG_ID = "id";
+    public static final String TAG_NAME = "name";
+    public static final String TAG_DATE = "date";
+    public static final String TAG_ISI = "isi";
     RecyclerView recyclerView;
     AlertDialog.Builder dialog;
     ArrayList<TaskData> itemList = new ArrayList<>();
@@ -46,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageEditProfile;
     TextView txtUsername;
     FloatingActionButton fab;
-    public static final String TAG_ID = "id";
-    public static final String TAG_NAME = "name";
-    public static final String TAG_DATE = "date";
-    public static final String TAG_ISI = "isi";
+    private SessionManager sessionManager;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -61,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        getCurrentFirebaseToken();
         //check is login
-        if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()){
+        if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()) {
             moveToLogin();
         }
         setSupportActionBar(toolbar);
@@ -71,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 //            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
 //        });
         txtUsername = findViewById(R.id.txt_username);
+        txtUsername.setText("Hello, "+sessionManager.getUserDetail().get("username"));
         txtUsername.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         });
@@ -115,26 +110,16 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, AddEditActivity.class);
             startActivity(intent);
         });
-        setUserData();
+//        setUserData();
         getAllData();
 
     }
 
     private void moveToLogin() {
-        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         finish();
-    }
-
-    public void setUserData() {
-        HashMap<String, String> row = SQLite.getUser();
-        String name = row.get("username") == null ? "" : row.get("username");
-        if (name.equals("")) {
-            txtUsername.setText("User");
-        } else {
-            txtUsername.setText(name);
-        }
     }
 
     public void getAllData() {
@@ -156,19 +141,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        setUserData();
         itemList.clear();
         getAllData();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.option_menu,menu);
+        getMenuInflater().inflate(R.menu.option_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.about:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage("Nama : Luckystia Mafasani Ulfa\nNIM : 1905551048");
