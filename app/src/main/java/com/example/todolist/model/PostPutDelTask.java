@@ -2,7 +2,7 @@ package com.example.todolist.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PostPulDelTask {
+public class PostPutDelTask {
 	@SerializedName("status")
 	String status;
 

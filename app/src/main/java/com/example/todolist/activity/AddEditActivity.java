@@ -1,9 +1,11 @@
 package com.example.todolist.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,43 +15,61 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.todolist.R;
 import com.example.todolist.helper.DBHelper;
+import com.example.todolist.helper.SessionManager;
+import com.example.todolist.model.PostPutDelTask;
+import com.example.todolist.remote.ApiClientLocal;
+import com.example.todolist.remote.ApiService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class AddEditActivity extends AppCompatActivity {
     private TextView title;
     private EditText txt_id, txt_name, txt_date, txt_isi;
-    private Button btn_submit, btn_cancel;
+    private Button btn_submit, btn_cancel, btn_delete;
     private DBHelper SQLite = new DBHelper(this);
     private String id, name, isi, date;
     private Calendar myCalendar = Calendar.getInstance();
+    private SessionManager sessionManager;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit);
+        setContentView(R.layout.activity_add_edit_remake);
+
+        sessionManager = new SessionManager(AddEditActivity.this);
+
+        apiService = ApiClientLocal.getClient().create(ApiService.class);
+
         title = findViewById(R.id.title);
         txt_id = findViewById(R.id.txt_id);
         txt_name = findViewById(R.id.txt_name);
         txt_date = findViewById(R.id.txt_date);
         txt_isi = findViewById(R.id.txt_isi);
         btn_submit = findViewById(R.id.btn_submit);
+        btn_delete = findViewById(R.id.btn_delete);
         btn_cancel = findViewById(R.id.btn_cancel);
         id = getIntent().getStringExtra(MainActivity.TAG_ID);
-//        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
-//        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
+        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
+        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
         if (id == null || id == "") {
             title.setText("Tambah Data");
+            btn_delete.setVisibility(View.GONE);
         } else {
             title.setText("Edit Data");
             txt_id.setText(id);
             txt_name.setText(name);
             txt_isi.setText(isi);
             txt_date.setText(date);
+            btn_submit.setText("Edit Task");
         }
 
         DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
@@ -70,9 +90,21 @@ public class AddEditActivity extends AppCompatActivity {
         btn_submit.setOnClickListener(v -> {
             try {
                 if (txt_id.getText().toString().equals("")) {
-                    save();
+                    saveSQLite();
+                    saveApi();
+                    Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    edit();
+                    editApi();
+                    editSQLite();
+                    Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 }
             } catch (Exception e) {
                 Log.e("Submit", e.toString());
@@ -81,6 +113,19 @@ public class AddEditActivity extends AppCompatActivity {
         btn_cancel.setOnClickListener(v -> {
             blank();
             finish();
+        });
+
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteSQLite();
+                deleteApi();
+                Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
         });
     }
 
@@ -117,7 +162,7 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     // Save data to SQLite database
-    private void save() {
+    private void saveSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
                 String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("") ||
                 String.valueOf(txt_isi.getText()) == null || String.valueOf(txt_isi.getText()).equals("")
@@ -129,13 +174,51 @@ public class AddEditActivity extends AppCompatActivity {
                     txt_name.getText().toString().trim(),
                     txt_date.getText().toString().trim(),
                     txt_isi.getText().toString().trim());
-            blank();
-            finish();
         }
     }
 
+    private void saveApi(){
+        String title = String.valueOf(txt_name.getText());
+        String date = String.valueOf(txt_date.getText());
+        String content = String.valueOf(txt_isi.getText());
+        String token = sessionManager.getUserDetail().get("loggedToken");
+        Toast.makeText(this, date, Toast.LENGTH_SHORT).show();
+        Call<PostPutDelTask> postTaskCall = apiService.postTask(token, title, date, content);
+        postTaskCall.enqueue(new Callback<PostPutDelTask>() {
+            @Override
+            public void onResponse(Call<PostPutDelTask> call, Response<PostPutDelTask> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<PostPutDelTask> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void editApi(){
+        String title = String.valueOf(txt_name.getText());
+        String date = String.valueOf(txt_date.getText());
+        String content = String.valueOf(txt_isi.getText());
+        String token = sessionManager.getUserDetail().get("loggedToken");
+        Call<PostPutDelTask> updateTaskCall = apiService.putTask(token, id, title, date, content);
+        updateTaskCall.enqueue(new Callback<PostPutDelTask>() {
+            @Override
+            public void onResponse(Call<PostPutDelTask> call, Response<PostPutDelTask> response) {
+//                MainActivity.ma.refresh();
+//                finish();
+            }
+
+            @Override
+            public void onFailure(Call<PostPutDelTask> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     // Update data in SQLite database
-    private void edit() {
+    private void editSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
                 String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("")) {
             Toast.makeText(getApplicationContext(),
@@ -147,8 +230,30 @@ public class AddEditActivity extends AppCompatActivity {
                     txt_date.getText().toString().trim(),
                     txt_isi.getText().toString().trim()
             );
-            blank();
-            finish();
+//            blank();
+//            finish();
         }
+    }
+
+    private void deleteSQLite(){
+        DBHelper SQLite = new DBHelper(AddEditActivity.this);
+        SQLite.deleteTask(Integer.valueOf(id));
+    }
+
+    private void deleteApi(){
+        String token = sessionManager.getUserDetail().get("loggedToken");
+        Call<PostPutDelTask> deleteTaskCall = apiService.deleteTask(token, id);
+        deleteTaskCall.enqueue(new Callback<PostPutDelTask>() {
+            @Override
+            public void onResponse(Call<PostPutDelTask> call, Response<PostPutDelTask> response) {
+//                MainActivity.ma.refresh();
+//                finish();
+            }
+
+            @Override
+            public void onFailure(Call<PostPutDelTask> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
