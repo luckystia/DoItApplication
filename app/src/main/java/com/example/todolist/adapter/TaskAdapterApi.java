@@ -91,9 +91,9 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 			public void onClick(View view) {
 				Intent toUpdate = new Intent(view.getContext(), AddEditActivity.class);
 				toUpdate.putExtra(MainActivity.TAG_ID, items.get(position).getId());
-				toUpdate.putExtra(MainActivity.TAG_TITLE, items.get(position).getTitle());
+//				toUpdate.putExtra(MainActivity.TAG_TITLE, items.get(position).getTitle());
 				toUpdate.putExtra(MainActivity.TAG_DATE, items.get(position).getDate());
-				toUpdate.putExtra(MainActivity.TAG_CONTENT, items.get(position).getContent());
+//				toUpdate.putExtra(MainActivity.TAG_CONTENT, items.get(position).getContent());
 				view.getContext().startActivity(toUpdate);
 			}
 		});
