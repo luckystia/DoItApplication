@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolist.R;
 import com.example.todolist.activity.AddEditActivity;
+import com.example.todolist.activity.MainActivity;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.GetTask;
@@ -85,6 +86,17 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 				}
 			}
 		});
+		holder.list_row.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent toUpdate = new Intent(view.getContext(), AddEditActivity.class);
+				toUpdate.putExtra(MainActivity.TAG_ID, items.get(position).getId());
+				toUpdate.putExtra(MainActivity.TAG_TITLE, items.get(position).getTitle());
+				toUpdate.putExtra(MainActivity.TAG_DATE, items.get(position).getDate());
+				toUpdate.putExtra(MainActivity.TAG_CONTENT, items.get(position).getContent());
+				view.getContext().startActivity(toUpdate);
+			}
+		});
 	}
 
 	@Override
@@ -95,7 +107,7 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 	public class TaskViewHolder extends RecyclerView.ViewHolder {
 		TextView id, name, date;
 		CheckBox completed;
-//		LinearLayout list_row;
+		LinearLayout list_row;
 //		public LinearLayout.LayoutParams params;
 //		public LinearLayout rootView;
 
@@ -105,7 +117,7 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 			name = itemView.findViewById(R.id.name);
 			date = itemView.findViewById(R.id.date);
 			completed = itemView.findViewById(R.id.rbCompleted);
-//			list_row = itemView.findViewById(R.id.list_row_item);
+			list_row = itemView.findViewById(R.id.list_row_item);
 
 //			params = new LinearLayout.LayoutParams(0, 0);
 //			rootView = itemView.findViewById(R.id.list_row_item);

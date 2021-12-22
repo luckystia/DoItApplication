@@ -69,15 +69,17 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @PUT("api/task/{id}")
-    Call<PostPutDelTask> putTask(@Field("id") String id,
+    @PUT("api/task")
+    Call<PostPutDelTask> putTask(@Header("Token-Login") String token,
+                                    @Field("id") String id,
                                  @Field("title") String title,
-                                 @Field("date") String nomor,
+                                 @Field("date") String date,
                                  @Field("content") String content);
 
     @FormUrlEncoded
-    @HTTP(method = "DELETE", path = "api/task/{id}", hasBody = true)
-    Call<PostPutDelTask> deleteTask(@Field("id") String id);
+    @HTTP(method = "DELETE", path = "api/deletetask", hasBody = true)
+    Call<PostPutDelTask> deleteTask(@Header("Token-Login") String token,
+                                    @Field("id") String id);
 
 
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,15 +53,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_NAME = "name";
     public static final String TAG_DATE = "date";
     public static final String TAG_ISI = "isi";
-    RecyclerView recyclerView;
-    AlertDialog.Builder dialog;
-    ArrayList<TaskData> itemList = new ArrayList<>();
-    TaskAdapter adapter;
+    public static final String TAG_CONTENT = "isi";
+    public static final String TAG_TITLE = "name";
     TaskAdapterApi mAdapter;
-    DBHelper SQLite = new DBHelper(this);
     ImageView imageEditProfile;
-    TextView txtUsername;
-    FloatingActionButton fab;
 
     ApiService mApiService;
     private RecyclerView.LayoutManager mLayoutManager;
