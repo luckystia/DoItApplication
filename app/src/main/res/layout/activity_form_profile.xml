@@ -179,13 +179,16 @@
         android:layout_width="match_parent"
         android:layout_marginHorizontal="20dp"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/btn_back"
-            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:text="Batal"/>
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/black"
+            android:text="Batal"
+            android:textColor="#FDFCFC" />
 
         <Button
             android:id="@+id/btnSave"
