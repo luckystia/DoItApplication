@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.todolist.model.TaskData;
 import com.example.todolist.R;
+import com.example.todolist.model.TaskData;
 
 import java.util.List;
 
 public class Adapter extends BaseAdapter {
-    private Activity activity;
+    private final Activity activity;
     private LayoutInflater inflater;
-    private List<TaskData> items;
+    private final List<TaskData> items;
 
     public Adapter(Activity activity, List<TaskData> items) {
         this.activity = activity;

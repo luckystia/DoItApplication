@@ -20,12 +20,12 @@ import java.util.Locale;
 
 
 public class AddEditActivity extends AppCompatActivity {
-    TextView title;
-    EditText txt_id, txt_name, txt_date, txt_isi;
-    Button btn_submit, btn_cancel;
-    DBHelper SQLite = new DBHelper(this);
-    String id, name, isi, date;
-    Calendar myCalendar = Calendar.getInstance();
+    private TextView title;
+    private EditText txt_id, txt_name, txt_date, txt_isi;
+    private Button btn_submit, btn_cancel;
+    private DBHelper SQLite = new DBHelper(this);
+    private String id, name, isi, date;
+    private Calendar myCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -26,8 +26,13 @@ import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.TaskData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_NAME = "name";
     public static final String TAG_DATE = "date";
     public static final String TAG_ISI = "isi";
-    RecyclerView recyclerView;
-    AlertDialog.Builder dialog;
-    ArrayList<TaskData> itemList = new ArrayList<>();
-    TaskAdapter adapter;
-    DBHelper SQLite = new DBHelper(this);
-    ImageView imageEditProfile;
-    TextView txtUsername;
-    FloatingActionButton fab;
+    private RecyclerView recyclerView;
+    private AlertDialog.Builder dialog;
+    private final ArrayList<TaskData> itemList = new ArrayList<>();
+    private TaskAdapter adapter;
+    private DBHelper SQLite = new DBHelper(this);
+    private TextView txtUsername, txtTanggal;
+    private FloatingActionButton fab;
     private SessionManager sessionManager;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -52,22 +56,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         sessionManager = new SessionManager(MainActivity.this);
+        txtUsername = findViewById(R.id.txt_username);
+        txtTanggal = findViewById(R.id.txt_tgl);
 
-//        getCurrentFirebaseToken();
+//        set Date Now
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        String formattedDate = df.format(c);
+        txtTanggal.setText(formattedDate);
+
         //check is login
         if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()) {
             moveToLogin();
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-//        imageEditProfile = findViewById(R.id.imageEditProfile);
-//        imageEditProfile.setOnClickListener(v -> {
-//            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-//        });
-        txtUsername = findViewById(R.id.txt_username);
-        txtUsername.setText("Hello, "+sessionManager.getUserDetail().get("username"));
+
+        txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
         txtUsername.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            startActivity(new Intent(MainActivity.this, FormProfileActivity.class));
         });
 
         fab = findViewById(R.id.floatPlus);
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
         itemList.clear();
         getAllData();
     }
@@ -173,22 +181,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void getCurrentFirebaseToken(){
-//        FirebaseInstanceId.getInstance().getInstanceId()
-//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w("TAG", "getInstanceId failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new Instance ID token
-//                        String token = task.getResult().getToken();
-//
-//
-//                        Toast.makeText(MainActivity.this, token.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 }

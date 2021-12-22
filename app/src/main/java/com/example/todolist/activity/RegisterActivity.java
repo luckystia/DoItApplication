@@ -56,11 +56,11 @@ public class RegisterActivity extends AppCompatActivity {
         apiService = ApiUtils.getUsetService();
         customDIalog = new CustomDIalog(RegisterActivity.this);
 
-        //drwaable
+        //drwaable check
         img = ContextCompat.getDrawable(RegisterActivity.this, R.drawable.icon_success);
         img.setBounds(0, 0, 70, 70);
 
-        //email validation
+        //username validation
         usernameValid = "^[A-Za-z][A-Za-z0-9]{5,10}$";
 
         //set Backgorund on fill
@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (passwordInput.getText().toString().trim().matches(confirmPwdInput.getText().toString()) && s.length() != 0) {
                     confirmPwdInput.setCompoundDrawables(null, null, img, null);
 
-                } else if (s.length() > 12 || s.length() < 6) {
+                } else if (s.length() < 6) {
                     passwordInput.setCompoundDrawables(null, null, null, null);
                     confirmPwdInput.setCompoundDrawables(null, null, null, null);
 

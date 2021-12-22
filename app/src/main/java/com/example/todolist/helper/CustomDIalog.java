@@ -61,17 +61,23 @@ public class CustomDIalog {
 
                     });
                 } else if (message.equals("success update") || message.equals("success update with password")) {
-                    messages.setText("Profile Update Success");
+                    //on not password update
                     if (!message.equals("success update with password")) {
+                        messages.setText("Profile Update Success");
                         btnDone.setOnClickListener(v -> {
                             activity.onBackPressed();
                         });
                     } else {
+                        //on password update
+                        messages.setText("Profile and Password Update Success. Please Re-Login!");
                         btnDone.setOnClickListener(v -> {
                             SessionManager sessionManager = new SessionManager(activity);
                             sessionManager.logout();
 
                             Intent intent = new Intent(activity, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK);
                             activity.startActivity(intent);
                             activity.finish();
                         });

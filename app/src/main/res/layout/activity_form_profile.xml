@@ -41,7 +41,6 @@
                     app:tint="@color/white" />
 
                 <TextView
-                    android:id="@+id/txt_tgl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/backbtn"

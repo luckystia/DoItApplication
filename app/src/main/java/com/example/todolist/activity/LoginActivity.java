@@ -61,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         setBackgroundFilled(username);
         setBackgroundFilled(password);
 
-        //custom validation
-        usernameValid = "^[A-Za-z][A-Za-z0-9]{5,}$";
+        //username validation
+        usernameValid = "^[A-Za-z][A-Za-z0-9]{5,10}$";
         customValidationForm(username, usernameValid);
 
         btnSubmit.setOnClickListener(v -> {
@@ -83,6 +83,24 @@ public class LoginActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
 
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+               if (s.length() < 6) {
+                    password.setCompoundDrawables(null, null, null, null);
+
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // other stuffs
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // other stuffs
+            }
         });
 
     }
@@ -164,8 +182,8 @@ public class LoginActivity extends AppCompatActivity {
         if (password.getText().toString().trim().length() == 0) {
             password.setError("This field is required");
             return false;
-        } else if (password.getText().toString().trim().length() > 12 || password.getText().toString().trim().length() < 6) {
-            password.setError("Password Minimal have 6 & Maximal have 12 character");
+        } else if ( password.getText().toString().trim().length() < 6) {
+            password.setError("Password Minimal have 6");
             return false;
         }
         // after all validation return true.
