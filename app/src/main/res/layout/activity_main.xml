@@ -72,8 +72,6 @@
                     android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
-
-
     </androidx.appcompat.widget.Toolbar>
 
 

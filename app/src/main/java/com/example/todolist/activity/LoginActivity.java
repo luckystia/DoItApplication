@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,11 +35,11 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText username, password;
-    private TextView registerUrl;
+    private TextView registerUrl,showPwd;
     private Button btnSubmit;
     private CustomDIalog customDIalog;
     private String usernameValid;
-    private Drawable img;
+    private Drawable imgSuccess;
     private SessionManager sessionManager;
     private ApiService apiService;
     private boolean isAllFieldsChecked = false;
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        showPwd = findViewById(R.id.showPwd);
         username = findViewById(R.id.usernameInput);
         password = findViewById(R.id.passwordInput);
         btnSubmit = findViewById(R.id.submitBtn);
@@ -54,8 +57,18 @@ public class LoginActivity extends AppCompatActivity {
         customDIalog = new CustomDIalog(LoginActivity.this);
         apiService = ApiUtils.getUsetService();
         //drwaable
-        img = ContextCompat.getDrawable(LoginActivity.this, R.drawable.icon_success);
-        img.setBounds(0, 0, 70, 70);
+        imgSuccess = ContextCompat.getDrawable(LoginActivity.this, R.drawable.icon_success);
+        imgSuccess.setBounds(0, 0, 70, 70);
+
+        showPwd.setOnClickListener(v -> {
+            if (password.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                showPwd.setText("Hide Password");
+            }else{
+                showPwd.setText("Show Password");
+                password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
 
         //set Backgorund on fill
         setBackgroundFilled(username);
@@ -163,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (!form.getText().toString().trim().isEmpty()) {
-                    form.setCompoundDrawables(null, null, img, null);
+                    form.setCompoundDrawables(null, null, imgSuccess, null);
                 } else {
                     form.setCompoundDrawables(null, null, null, null);
                 }
@@ -195,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
                 if (form.getText().toString().trim().matches(validation) && s.length() != 0) {
-                    form.setCompoundDrawables(null, null, img, null);
+                    form.setCompoundDrawables(null, null, imgSuccess, null);
                     // or
 
                 } else {

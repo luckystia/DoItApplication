@@ -47,7 +47,7 @@ public class CustomDIalog {
                 if (message.equals("success")) {
                     messages.setText("Registration is success. Now You Can Login Using Your Account");
                     btnDone.setOnClickListener(v -> {
-                        Intent intent = new Intent(activity, LoginActivity.class);
+                        Intent intent = new Intent(activity, MainActivity.class);
                         activity.startActivity(intent);
                         activity.finish();
 

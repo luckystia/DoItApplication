@@ -137,21 +137,39 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/changePasswordSection"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/btnChangePassword">
 
-            <TextView
-                android:id="@+id/textOldPassword"
+            <LinearLayout
+                android:id="@+id/labelOldPwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Old Password"
-                android:textColor="#7E7E7E"
-                android:textSize="12sp"
-                tools:ignore="MissingConstraints" />
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:id="@+id/textOldPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Old Password"
+                    android:textColor="#7E7E7E"
+                    android:textSize="12sp"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/showOldPwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Show Password"
+                    android:textColor="#0A62FF"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/inputOldPassword"
@@ -167,19 +185,37 @@
                 android:textColor="#0A62FF"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textOldPassword" />
+                app:layout_constraintTop_toBottomOf="@id/labelOldPwd" />
 
-            <TextView
-                android:id="@+id/textNewPassword"
+            <LinearLayout
+                android:id="@+id/labelNewPwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="New Password"
-                android:textColor="#7E7E7E"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/inputOldPassword" />
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/inputOldPassword"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:id="@+id/textNewPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="New Password"
+                    android:textColor="#7E7E7E"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/showNewPwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Show Password"
+                    android:textColor="#0A62FF"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/inputNewPassword"
@@ -194,7 +230,7 @@
                 android:singleLine="true"
                 android:textColor="#0A62FF"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@id/textNewPassword" />
+                app:layout_constraintTop_toBottomOf="@id/labelNewPwd" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

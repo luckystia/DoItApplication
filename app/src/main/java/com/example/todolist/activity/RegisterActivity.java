@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.todolist.R;
 import com.example.todolist.helper.CustomDIalog;
+import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.user.User;
 import com.example.todolist.model.user.UserData;
 import com.example.todolist.remote.ApiService;
@@ -32,9 +35,10 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
     private final UserData user = new UserData();
-    TextView loginUrl;
+    TextView loginUrl, showPwd, showConfirmPwd;
     private EditText nameInput, usernameInput, passwordInput, confirmPwdInput;
     private Button btnSubmit;
+    private SessionManager sessionManager;
     private Drawable backgroundEmpty, backgroundFilled;
     private boolean isAllFieldsChecked = false;
     private Drawable img;
@@ -50,12 +54,35 @@ public class RegisterActivity extends AppCompatActivity {
         nameInput = findViewById(R.id.nameInput);
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
+        showPwd = findViewById(R.id.showPwd);
+        showConfirmPwd = findViewById(R.id.showConfirmPwd);
         confirmPwdInput = findViewById(R.id.confirmPwdInput);
         btnSubmit = findViewById(R.id.submitBtn);
         loginUrl = findViewById(R.id.loginUrl);
         apiService = ApiUtils.getUsetService();
         customDIalog = new CustomDIalog(RegisterActivity.this);
 
+        getCurrentFirebaseToken();
+
+        showPwd.setOnClickListener(v -> {
+            if (passwordInput.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
+                passwordInput.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                showPwd.setText("Hide Password");
+            } else {
+                showPwd.setText("Show Password");
+                passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+
+        showConfirmPwd.setOnClickListener(v -> {
+            if (confirmPwdInput.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
+                confirmPwdInput.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                showConfirmPwd.setText("Hide Password");
+            } else {
+                showConfirmPwd.setText("Show Password");
+                confirmPwdInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
         //drwaable check
         img = ContextCompat.getDrawable(RegisterActivity.this, R.drawable.icon_success);
         img.setBounds(0, 0, 70, 70);
@@ -113,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
                 // other stuffs
             }
         });
-        getCurrentFirebaseToken();
+
 
         //submit button
         btnSubmit.setOnClickListener(v -> {
@@ -121,7 +148,6 @@ public class RegisterActivity extends AppCompatActivity {
             isAllFieldsChecked = CheckAllFields();
             if (isAllFieldsChecked) {
                 customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
-
                 user.setName(nameInput.getText().toString());
                 user.setUsername(usernameInput.getText().toString());
                 user.setPassword(passwordInput.getText().toString());
@@ -156,6 +182,13 @@ public class RegisterActivity extends AppCompatActivity {
                         allaMessages.append(alert);
                     }
                     customDIalog.startAlertDialog("dialog_info", allaMessages.toString(), R.layout.info_layout_dialog);
+
+                    if (allaMessages.toString().equals("success")) {
+                        sessionManager = new SessionManager(RegisterActivity.this);
+                        UserData userData = response.body().getData();
+                        sessionManager.createLoginSession(userData);
+                    }
+
 
                 }
 
@@ -203,6 +236,9 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean CheckAllFields() {
         if (nameInput.getText().toString().trim().length() <= 0) {
             nameInput.setError("This field is required");
+            return false;
+        }else if (nameInput.getText().toString().trim().length() > 100) {
+            nameInput.setError("Password Maximal have 10 Charater");
             return false;
         }
         if (usernameInput.getText().toString().trim().length() == 0) {
@@ -266,7 +302,6 @@ public class RegisterActivity extends AppCompatActivity {
                 // Get new Instance ID token
                 String token = task.getResult().getToken();
                 user.setNotif_token(token);
-//                        Toast.makeText(RegisterActivity.this, "berhasil", Toast.LENGTH_SHORT).show();
             }
         });
     }

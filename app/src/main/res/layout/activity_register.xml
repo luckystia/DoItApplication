@@ -118,14 +118,28 @@ userData correctly"
                 android:textColor="#0A62FF"
                 android:textSize="12sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Password"
-                android:textColor="#7E7E7E"
-                android:textSize="12sp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Password"
+                    android:textColor="#7E7E7E"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/showPwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Show Password"
+                    android:layout_marginHorizontal="5dp"
+                    android:textColor="#0A62FF"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/passwordInput"
@@ -142,14 +156,28 @@ userData correctly"
                 android:textColor="#0A62FF"
                 android:textSize="12sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Confirm Password"
-                android:textColor="#7E7E7E"
-                android:textSize="12sp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Confirmation Password"
+                    android:textColor="#7E7E7E"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/showConfirmPwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Show Password"
+                    android:layout_marginHorizontal="5dp"
+                    android:textColor="#0A62FF"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/confirmPwdInput"

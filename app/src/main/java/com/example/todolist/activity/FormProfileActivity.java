@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +32,7 @@ import retrofit2.Response;
 public class FormProfileActivity extends AppCompatActivity {
     private final UserData user = new UserData();
     private EditText inputName, inputUsername, inputOldPassword, inputNewPassword;
-    private TextView btnChangePassword;
+    private TextView btnChangePassword, showOldPwd, showNewPwd;
     private ConstraintLayout changePasswordSection;
     private ImageButton btnBack;
     private SessionManager sessionManager;
@@ -46,6 +48,8 @@ public class FormProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_profile);
         sessionManager = new SessionManager(this);
         btnBack = findViewById(R.id.backbtn);
+        showOldPwd = findViewById(R.id.showOldPwd);
+        showNewPwd = findViewById(R.id.showNewPwd);
         changePasswordSection = findViewById(R.id.changePasswordSection);
         btnChangePassword = findViewById(R.id.btnChangePassword);
         inputName = findViewById(R.id.inputName);
@@ -56,6 +60,26 @@ public class FormProfileActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
 
         customDIalog = new CustomDIalog(FormProfileActivity.this);
+
+        showOldPwd.setOnClickListener(v -> {
+            if (inputOldPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                inputOldPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                showOldPwd.setText("Hide Password");
+            }else{
+                showOldPwd.setText("Show Password");
+                inputOldPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+
+        showNewPwd.setOnClickListener(v -> {
+            if (inputNewPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+                inputNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                showNewPwd.setText("Hide Password");
+            }else{
+                showNewPwd.setText("Show Password");
+                inputNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
 
         //drwaable
         img = ContextCompat.getDrawable(FormProfileActivity.this, R.drawable.icon_success);
