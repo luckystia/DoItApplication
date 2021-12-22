@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout = findViewById(R.id.btnLogout);
 
         textName.setText(sessionManager.getUserDetail().get("name"));
-        textUsername.setText(sessionManager.getUserDetail().get("name"));
+        textUsername.setText(sessionManager.getUserDetail().get("username"));
         
         buttonLogout.setOnClickListener(v ->{
             sessionManager.logout();
@@ -50,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonEditProfile.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, FormProfileActivity.class));
         });
-        buttonBack = findViewById(R.id.btn_back);
+//        buttonBack = findViewById(R.id.btn_back);
     }
 
     @Override

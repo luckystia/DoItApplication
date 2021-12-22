@@ -71,6 +71,11 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void clear(){
+        editor.clear();
+        editor.commit();
+    }
+
     public Boolean isLoggedIn() {
         return sharedPreferences.getBoolean(IS_LOGGED_IN, false);
     }

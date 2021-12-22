@@ -1,139 +1,127 @@
 package com.example.todolist.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.SeekBar;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.example.todolist.R;
-import com.example.todolist.helper.DBHelper;
-import java.util.HashMap;
+import com.example.todolist.helper.CustomDIalog;
+import com.example.todolist.helper.SessionManager;
+import com.example.todolist.model.user.User;
+import com.example.todolist.model.user.UserData;
+import com.example.todolist.remote.ApiService;
+import com.example.todolist.remote.ApiUtils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FormProfileActivity extends AppCompatActivity {
-    EditText editTextName;
-    RadioButton radioMale, radioFemale;
-    SeekBar seekBarAge;
-    CheckBox checkBoxPainting, checkboxReading, checkboxSinging;
-    Button buttonSave, buttonBack;
-    TextView textSeekbarAge;
-    String selectedGender, selectedHobby;
-    DBHelper SQLite = new DBHelper(this);
-    boolean isUserAlreadyExist;
+    private final UserData user = new UserData();
+    private EditText inputName, inputUsername, inputOldPassword, inputNewPassword;
+    private TextView btnChangePassword;
+    private ConstraintLayout changePasswordSection;
+    private ImageButton btnBack;
+    private SessionManager sessionManager;
+    private ApiService apiService;
+    private Button btnSubmit;
+    private CustomDIalog customDIalog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_profile);
+        sessionManager = new SessionManager(this);
+        btnBack = findViewById(R.id.backbtn);
+        changePasswordSection = findViewById(R.id.changePasswordSection);
+        btnChangePassword = findViewById(R.id.btnChangePassword);
+        inputName = findViewById(R.id.inputName);
+        inputUsername = findViewById(R.id.inputUsername);
+        inputOldPassword = findViewById(R.id.inputOldPassword);
+        inputNewPassword = findViewById(R.id.inputNewPassword);
+        apiService = ApiUtils.getUsetService();
+        btnSubmit = findViewById(R.id.btn_submit);
+        customDIalog = new CustomDIalog(FormProfileActivity.this);
 
-        editTextName = findViewById(R.id.editName);
-        radioMale = findViewById(R.id.radioMale);
-        radioFemale = findViewById(R.id.radioFemale);
-        textSeekbarAge = findViewById(R.id.textSeekbarValue);
-        seekBarAge = findViewById(R.id.seekBarAge);
-        seekBarAge.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        inputName.setText(sessionManager.getUserDetail().get("name"));
+        inputUsername.setText(sessionManager.getUserDetail().get("username"));
+
+        btnChangePassword.setOnClickListener(v -> {
+            if (changePasswordSection.getVisibility() != View.VISIBLE) {
+                changePasswordSection.setVisibility(View.VISIBLE);
+                btnChangePassword.setText("Cancel Password Change");
+            } else {
+                changePasswordSection.setVisibility(View.GONE);
+                btnChangePassword.setText("Change Password");
+            }
+        });
+        btnBack.setOnClickListener(v -> {
+            onBackPressed();
+        });
+        btnSubmit.setOnClickListener(v -> {
+            customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
+            user.setName(inputName.getText().toString());
+            user.setUsername(inputUsername.getText().toString());
+
+            if (changePasswordSection.getVisibility() == View.VISIBLE)
+                user.setOld_password(inputOldPassword.getText().toString().trim());
+            user.setNew_password(inputNewPassword.getText().toString().trim());
+            updateUser(sessionManager.getUserDetail().get("loggedToken"), user);
+        });
+
+    }
+
+    private void updateUser(String tokenLogin, UserData user) {
+        StringBuilder allaMessages = new StringBuilder();
+        Call<User> call = apiService.updateUser(tokenLogin, user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textSeekbarAge.setText(progress + "");
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    customDIalog.dismissDialog();
+
+                    for (String alert : response.body().getMessage()) {
+                        if (allaMessages.length() > 0) {
+                            allaMessages.append(" & "); // some divider between the different texts
+                        }
+                        allaMessages.append(alert);
+                    }
+                    customDIalog.startAlertDialog("dialog_info", allaMessages.toString(), R.layout.info_layout_dialog);
+
+                    if (allaMessages.toString().equals("success update")) {
+                        sessionManager = new SessionManager(FormProfileActivity.this);
+                        sessionManager.clear();
+
+                        UserData userData = response.body().getData();
+                        sessionManager.createLoginSession(userData);
+
+                    }
+
+                }
+
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onFailure(Call<User> call1, Throwable throwable) {
+                customDIalog.dismissDialog();
+                Toast.makeText(FormProfileActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        checkBoxPainting = findViewById(R.id.checkboxPainting);
-        checkboxReading = findViewById(R.id.checkboxReading);
-        checkboxSinging = findViewById(R.id.checkboxSinging);
-        buttonSave = findViewById(R.id.btnSave);
-        buttonSave.setOnClickListener(v -> {
-            saveProfile();
-        });
-        buttonBack = findViewById(R.id.btn_back);
-        buttonBack.setOnClickListener(v -> {
-            finish();
-        });
-        setUserData();
     }
 
-    public void saveProfile() {
-        selectedGender = "";
-        if (radioMale.isChecked()) {
-            selectedGender = "Laki-laki";
-        } else if (radioFemale.isChecked()) {
-            selectedGender = "Perempuan";
-        }
-
-        selectedHobby = "";
-        if (checkBoxPainting.isChecked()) {
-            selectedHobby += "Melukis ";
-        }
-        if (checkboxReading.isChecked()) {
-            selectedHobby += "Membaca ";
-        }
-        if (checkboxSinging.isChecked()) {
-            selectedHobby += " Menyanyi ";
-        }
-
-        if (isUserAlreadyExist) {
-            SQLite.updateUser(
-                    editTextName.getText().toString(),
-                    selectedGender,
-                    Integer.parseInt(textSeekbarAge.getText().toString()),
-                    selectedHobby);
-
-        } else {
-            SQLite.insertUser(
-                    editTextName.getText().toString(),
-                    selectedGender,
-                    Integer.parseInt(textSeekbarAge.getText().toString()),
-                    selectedHobby);
-        }
-        finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        inputName.setText(sessionManager.getUserDetail().get("name"));
+        inputUsername.setText(sessionManager.getUserDetail().get("username"));
     }
 
-    public void setUserData() {
-        HashMap<String, String> row = SQLite.getUser();
-        if (!row.isEmpty()) {
-            isUserAlreadyExist = true;
-        }
-        String name = row.get("username") == null ? "" : row.get("username");
-        String gender = row.get("gender") == null ? "" : row.get("gender");
-        String age = row.get("age") == null ? "" : row.get("age");
-        String hobby = row.get("hobby") == null ? "" : row.get("hobby");
-
-        editTextName.setText(name);
-
-        if (gender.equalsIgnoreCase("Laki-laki")) {
-            radioMale.setChecked(true);
-        } else if (gender.equalsIgnoreCase("Perempuan")) {
-            radioFemale.setChecked(true);
-        } else {
-            radioMale.setChecked(false);
-            radioFemale.setChecked(false);
-        }
-
-        if (!age.equals("")) {
-            textSeekbarAge.setText(age);
-            seekBarAge.setProgress(Integer.parseInt(age));
-        }
-
-        if (hobby.contains("Melukis")) {
-            checkBoxPainting.setChecked(true);
-        }
-        if (hobby.contains("Membaca")) {
-            checkboxReading.setChecked(true);
-        }
-        if (hobby.contains("Menyanyi")) {
-            checkboxSinging.setChecked(true);
-        }
-
-    }
 
 }

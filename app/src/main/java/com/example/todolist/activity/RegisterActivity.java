@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Drawable backgroundEmpty, backgroundFilled;
     private boolean isAllFieldsChecked = false;
     private Drawable img;
-    private String emailPattern, usernameValid;
+    private String usernameValid;
     private ApiService apiService;
     private CustomDIalog customDIalog;
 

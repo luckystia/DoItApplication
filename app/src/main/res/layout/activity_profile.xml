@@ -35,12 +35,12 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <ImageView
-        android:layout_width="135dp"
-        android:id="@+id/avatarDummy"
-        android:layout_height="95dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="15dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_baseline_account_circle_24"/>
+        android:contentDescription="divider"
+        android:src="@drawable/devider" />
 
     <RelativeLayout
         android:layout_width="fill_parent"

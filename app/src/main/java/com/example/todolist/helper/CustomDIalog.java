@@ -32,7 +32,7 @@ public class CustomDIalog {
             GifImageView imageView = dialog.findViewById(R.id.animateIcon);
             TextView messages = dialog.findViewById(R.id.messages);
             Button btnDone = dialog.findViewById(R.id.btnDone);
-            if (message.equals("success") || message.equals("true")) {
+            if (message.equals("success") || message.equals("true") || message.equals("success update") || message.equals("success update with password")) {
 //                prvent cancel the dialog
                 dialog.setCancelable(false);
                 dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -60,6 +60,23 @@ public class CustomDIalog {
                         activity.finish();
 
                     });
+                } else if (message.equals("success update") || message.equals("success update with password")) {
+                    messages.setText("Profile Update Success");
+                    if (!message.equals("success update with password")) {
+                        btnDone.setOnClickListener(v -> {
+                            activity.onBackPressed();
+                        });
+                    } else {
+                        btnDone.setOnClickListener(v -> {
+                            SessionManager sessionManager = new SessionManager(activity);
+                            sessionManager.logout();
+
+                            Intent intent = new Intent(activity, LoginActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        });
+                    }
+
                 }
                 dialog.setCanceledOnTouchOutside(false);
                 btnDone.setText("Done");
