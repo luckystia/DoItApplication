@@ -2,8 +2,7 @@ package com.example.todolist.remote;
 
 
 import com.example.todolist.model.GetTask;
-import com.example.todolist.model.PostPulDelTask;
-import com.example.todolist.model.TaskData;
+import com.example.todolist.model.PostPutDelTask;
 import com.example.todolist.model.user.User;
 import com.example.todolist.model.user.UserData;
 
@@ -44,25 +43,41 @@ public interface ApiService {
 
 
     //task
-    @GET("api/task")
-    Call<GetTask> getTasks();
+    @GET("api/get-task")
+    Call<GetTask> getTasks(@Header("Token-Login") String token);
+
+
 
     @FormUrlEncoded
     @POST("api/task")
-    Call<PostPulDelTask> postTask(@Field("title") String title,
-                                    @Field("date") String nomor,
-                                    @Field("content") String content);
+    Call<PostPutDelTask> postTask(@Header("Token-Login") String token,
+                                  @Field("title") String title,
+                                  @Field("date") String nomor,
+                                  @Field("content") String content);
+
+
+//   Complete and Uncomplete
+    @FormUrlEncoded
+    @POST("api/task-completed")
+    Call<PostPutDelTask> completeTask(@Header("Token-Login") String token,
+                                        @Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("api/task-uncompleted")
+    Call<PostPutDelTask> uncompleteTask(@Header("Token-Login") String token,
+                                        @Field("id") String id);
+
 
     @FormUrlEncoded
     @PUT("api/task/{id}")
-    Call<PostPulDelTask> putTask(@Field("id") String id,
-                                     @Field("title") String title,
-                                     @Field("date") String nomor,
-                                     @Field("content") String content);
+    Call<PostPutDelTask> putTask(@Field("id") String id,
+                                 @Field("title") String title,
+                                 @Field("date") String nomor,
+                                 @Field("content") String content);
 
     @FormUrlEncoded
     @HTTP(method = "DELETE", path = "api/task/{id}", hasBody = true)
-    Call<PostPulDelTask> deleteTask(@Field("id") String id);
+    Call<PostPutDelTask> deleteTask(@Field("id") String id);
 
 
 }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.todolist.R;
 import com.example.todolist.adapter.RecyclerItemClickListener;
 import com.example.todolist.adapter.TaskAdapter;
+import com.example.todolist.adapter.TaskAdapterApi;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
+import com.example.todolist.model.GetTask;
+import com.example.todolist.model.Task;
 import com.example.todolist.model.TaskData;
+import com.example.todolist.remote.ApiClientLocal;
+import com.example.todolist.remote.ApiService;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormat;
@@ -33,6 +40,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +52,20 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_NAME = "name";
     public static final String TAG_DATE = "date";
     public static final String TAG_ISI = "isi";
+    RecyclerView recyclerView;
+    AlertDialog.Builder dialog;
+    ArrayList<TaskData> itemList = new ArrayList<>();
+    TaskAdapter adapter;
+    TaskAdapterApi mAdapter;
+    DBHelper SQLite = new DBHelper(this);
+    ImageView imageEditProfile;
+    TextView txtUsername;
+    FloatingActionButton fab;
+
+    ApiService mApiService;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public static MainActivity ma;
+
     private RecyclerView recyclerView;
     private AlertDialog.Builder dialog;
     private final ArrayList<TaskData> itemList = new ArrayList<>();
@@ -79,46 +105,54 @@ public class MainActivity extends AppCompatActivity {
 
         fab = findViewById(R.id.floatPlus);
         recyclerView = findViewById(R.id.list);
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        final String idx = itemList.get(position).getId();
-                        final String name = itemList.get(position).getJudul();
-                        final String date = itemList.get(position).getDate();
-                        final String isi = itemList.get(position).getIsi();
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                        dialog.setTitle(name);
-                        dialog.setMessage(isi);
-                        dialog.setPositiveButton("Edit", (d, id1) -> {
-                            Intent intent = new Intent(MainActivity.this, AddEditActivity.class);
-                            intent.putExtra(TAG_ID, idx);
-                            intent.putExtra(TAG_NAME, name);
-                            intent.putExtra(TAG_DATE, date);
-                            intent.putExtra(TAG_ISI, isi);
-                            startActivity(intent);
-                        });
-                        dialog.setNegativeButton("Hapus", (d, id12) -> {
-                            DBHelper SQLite = new DBHelper(MainActivity.this);
-                            SQLite.deleteTask(Integer.parseInt(idx));
-                            itemList.clear();
-                            getAllData();
-                        });
-                        dialog.show();
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                    }
-                })
-        );
+//        recyclerView.addOnItemTouchListener(
+//                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+////                        final String idx = itemList.get(position).getId();
+////                        final String name = itemList.get(position).getJudul();
+////                        final String date = itemList.get(position).getDate();
+////                        final String isi = itemList.get(position).getIsi();
+////                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+////                        dialog.setTitle(name);
+////                        dialog.setMessage(isi);
+////                        dialog.setPositiveButton("Edit", (d, id1) -> {
+////                            Intent intent = new Intent(MainActivity.this, AddEditActivity.class);
+////                            intent.putExtra(TAG_ID, idx);
+////                            intent.putExtra(TAG_NAME, name);
+////                            intent.putExtra(TAG_DATE, date);
+////                            intent.putExtra(TAG_ISI, isi);
+////                            startActivity(intent);
+////                        });
+////                        dialog.setNegativeButton("Hapus", (d, id12) -> {
+////                            DBHelper SQLite = new DBHelper(MainActivity.this);
+////                            SQLite.deleteTask(Integer.parseInt(idx));
+////                            itemList.clear();
+//////                            getAllData();
+////                        });
+////                        dialog.show();
+//                    }
+//
+//                    @Override
+//                    public void onLongItemClick(View view, int position) {
+//                    }
+//                })
+//        );
         SQLite = new DBHelper(this);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, AddEditActivity.class);
             startActivity(intent);
         });
 //        setUserData();
-        getAllData();
+//        getAllData();
+
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        mApiService = ApiClientLocal.getClient().create(ApiService.class);
+        ma=this;
+        refresh();
+//        setUserData();
+//        getAllData();
 
     }
 
@@ -148,9 +182,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+//        setUserData();
         txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
         itemList.clear();
-        getAllData();
+//        getAllData();
     }
 
     @Override
@@ -181,4 +216,44 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void refresh() {
+        Call<GetTask> kontakCall = mApiService.getTasks(sessionManager.getUserDetail().get("loggedToken"));
+        kontakCall.enqueue(new Callback<GetTask>() {
+            @Override
+            public void onResponse(Call<GetTask> call, Response<GetTask>
+              response) {
+                List<Task> KontakList = response.body().getListDataTask();
+                Log.d("Retrofit Get", "Jumlah data Kontak: " +
+                  String.valueOf(KontakList.size()));
+                mAdapter = new TaskAdapterApi(KontakList);
+                recyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<GetTask> call, Throwable t) {
+                Log.e("Retrofit Get", t.toString());
+            }
+        });
+    }
+
+
+
+//    private void getCurrentFirebaseToken(){
+//        FirebaseInstanceId.getInstance().getInstanceId()
+//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.w("TAG", "getInstanceId failed", task.getException());
+//                            return;
+//                        }
+//
+//                        // Get new Instance ID token
+//                        String token = task.getResult().getToken();
+//
+//
+//                        Toast.makeText(MainActivity.this, token.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }
