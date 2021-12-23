@@ -57,7 +57,7 @@ public class ActiveTaskFragment extends Fragment {
 
 		sessionManager = new SessionManager(getContext());
 
-		recyclerView = view.findViewById(R.id.listCompleted);
+		recyclerView = view.findViewById(R.id.listActive);
 
 		mLayoutManager = new LinearLayoutManager(getContext());
 		recyclerView.setLayoutManager(mLayoutManager);

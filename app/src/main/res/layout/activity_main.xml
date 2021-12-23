@@ -7,18 +7,6 @@
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <TextView
-        android:id="@+id/history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginTop="130dp"
-        android:fontFamily="@font/poppins_regular"
-        android:paddingStart="30dp"
-        android:text="Task List"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/header"
@@ -127,7 +115,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="70dp"
         android:src="@drawable/ic_baseline_add_24"
         app:backgroundTint="#0A62FF" />
 </RelativeLayout>

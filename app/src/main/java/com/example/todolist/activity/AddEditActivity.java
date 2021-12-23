@@ -1,9 +1,14 @@
 package com.example.todolist.activity;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.todolist.R;
+import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.PostPutDelTask;
@@ -31,7 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEditActivity extends AppCompatActivity{
+public class AddEditActivity extends AppCompatActivity {
     private TextView title;
     private EditText txt_id, txt_name, txt_date, txt_isi;
     private Button btn_submit, btn_cancel, btn_delete;
@@ -41,6 +47,8 @@ public class AddEditActivity extends AppCompatActivity{
     private SessionManager sessionManager;
     private ApiService apiService;
     private DatePickerDialog datePickerDialog;
+    private CustomDIalog customDIalog;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,8 @@ public class AddEditActivity extends AppCompatActivity{
         setContentView(R.layout.activity_add_edit_remake);
 
         sessionManager = new SessionManager(AddEditActivity.this);
+
+        customDIalog = new CustomDIalog(AddEditActivity.this);
 
         apiService = ApiClientLocal.getClient().create(ApiService.class);
 
@@ -86,8 +96,8 @@ public class AddEditActivity extends AppCompatActivity{
         txt_date.setOnClickListener(v -> {
             // TODO Auto-generated method stub
             new DatePickerDialog(AddEditActivity.this, date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+              .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+              myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         btn_submit.setOnClickListener(v -> {
@@ -95,19 +105,11 @@ public class AddEditActivity extends AppCompatActivity{
                 if (txt_id.getText().toString().equals("")) {
                     saveSQLite();
                     saveApi();
-                    Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+                    customDIalog.startAlertDialog("dialog_info", "success add task", R.layout.info_layout_dialog);
                 } else {
                     editApi();
                     editSQLite();
-                    Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+                    customDIalog.startAlertDialog("dialog_info", "success edit task", R.layout.info_layout_dialog);
                 }
             } catch (Exception e) {
                 Log.e("Submit", e.toString());
@@ -121,13 +123,14 @@ public class AddEditActivity extends AppCompatActivity{
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteSQLite();
-                deleteApi();
-                Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+//                deleteSQLite();
+//                deleteApi();
+//                Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                finish();
+                startAlertDialog("dialog_info", "delete confirm", R.layout.confirm_layout_dialog);
             }
         });
     }
@@ -150,7 +153,7 @@ public class AddEditActivity extends AppCompatActivity{
     }
 
     private void updateLabelDate() {
-        String myFormat ="dd-MM-yyyy" ; //In which you need put here
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
         txt_date.setText(sdf.format(myCalendar.getTime()));
@@ -167,20 +170,20 @@ public class AddEditActivity extends AppCompatActivity{
     // Save data to SQLite database
     private void saveSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
-                String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("") ||
-                String.valueOf(txt_isi.getText()) == null || String.valueOf(txt_isi.getText()).equals("")
+          String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("") ||
+          String.valueOf(txt_isi.getText()) == null || String.valueOf(txt_isi.getText()).equals("")
         ) {
             Toast.makeText(getApplicationContext(),
-                    "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
+              "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
         } else {
             SQLite.insertTask(
-                    txt_name.getText().toString().trim(),
-                    txt_date.getText().toString().trim(),
-                    txt_isi.getText().toString().trim());
+              txt_name.getText().toString().trim(),
+              txt_date.getText().toString().trim(),
+              txt_isi.getText().toString().trim());
         }
     }
 
-    private void saveApi(){
+    private void saveApi() {
         String title = String.valueOf(txt_name.getText());
         String date = String.valueOf(txt_date.getText());
         String content = String.valueOf(txt_isi.getText());
@@ -199,7 +202,7 @@ public class AddEditActivity extends AppCompatActivity{
         });
     }
 
-    private void editApi(){
+    private void editApi() {
         String title = String.valueOf(txt_name.getText());
         String date = String.valueOf(txt_date.getText());
         String content = String.valueOf(txt_isi.getText());
@@ -222,27 +225,27 @@ public class AddEditActivity extends AppCompatActivity{
     // Update data in SQLite database
     private void editSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
-                String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("")) {
+          String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("")) {
             Toast.makeText(getApplicationContext(),
-                    "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
+              "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
         } else {
             SQLite.updateTask(
-                    Integer.parseInt(txt_id.getText().toString().trim()),
-                    txt_name.getText().toString().trim(),
-                    txt_date.getText().toString().trim(),
-                    txt_isi.getText().toString().trim()
+              Integer.parseInt(txt_id.getText().toString().trim()),
+              txt_name.getText().toString().trim(),
+              txt_date.getText().toString().trim(),
+              txt_isi.getText().toString().trim()
             );
 //            blank();
 //            finish();
         }
     }
 
-    private void deleteSQLite(){
+    private void deleteSQLite() {
         DBHelper SQLite = new DBHelper(AddEditActivity.this);
         SQLite.deleteTask(Integer.valueOf(id));
     }
 
-    private void deleteApi(){
+    private void deleteApi() {
         String token = sessionManager.getUserDetail().get("loggedToken");
         Call<PostPutDelTask> deleteTaskCall = apiService.deleteTask(token, id);
         deleteTaskCall.enqueue(new Callback<PostPutDelTask>() {
@@ -258,6 +261,49 @@ public class AddEditActivity extends AppCompatActivity{
             }
         });
     }
+
+    public void startAlertDialog(String type, String message, Integer view) {
+        dialog = new Dialog(this);
+        dialog.setContentView(view);
+
+        if (type.equals("dialog_info")) {
+            TextView messages = dialog.findViewById(R.id.messages);
+            Button btnDelete = dialog.findViewById(R.id.btnDelete);
+            Button btnCancel = dialog.findViewById(R.id.btnCancel);
+            if (message.equals("delete confirm")) {
+//                prvent cancel the dialog
+                dialog.setCancelable(false);
+                dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+
+                        return keyCode == KeyEvent.KEYCODE_BACK;
+                    }
+                });
+
+                if (message.equals("delete confirm")) {
+                    messages.setText("Are you sure want to delete this task?");
+                    btnCancel.setOnClickListener(v -> {
+                        dialog.dismiss();
+                    });
+                    btnDelete.setOnClickListener(v -> {
+                        deleteSQLite();
+                        deleteApi();
+                        Intent intent = new Intent(AddEditActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    });
+                }
+                dialog.setCanceledOnTouchOutside(false);
+
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                dialog.show();
+            }
+
 
 //    private void showDatePickerDialog(){
 //        DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -276,4 +322,6 @@ public class AddEditActivity extends AppCompatActivity{
 //
 //        }
 //    }
+        }
+    }
 }

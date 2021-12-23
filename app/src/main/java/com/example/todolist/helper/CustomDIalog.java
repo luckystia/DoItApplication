@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.todolist.R;
+import com.example.todolist.activity.AddEditActivity;
 import com.example.todolist.activity.LoginActivity;
 import com.example.todolist.activity.MainActivity;
 
@@ -32,7 +33,7 @@ public class CustomDIalog {
             GifImageView imageView = dialog.findViewById(R.id.animateIcon);
             TextView messages = dialog.findViewById(R.id.messages);
             Button btnDone = dialog.findViewById(R.id.btnDone);
-            if (message.equals("success") || message.equals("true") || message.equals("success update") || message.equals("success update with password")) {
+            if (message.equals("success") || message.equals("true") || message.equals("success update") || message.equals("success update with password") || message.equals("success add task") || message.equals("success edit task")) {
 //                prvent cancel the dialog
                 dialog.setCancelable(false);
                 dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -59,6 +60,24 @@ public class CustomDIalog {
                         activity.startActivity(intent);
                         activity.finish();
 
+                    });
+                } else if (message.equals("success add task")) {
+                    messages.setText("Add Task Success. Click the button below to go to the main page!");
+                    btnDone.setOnClickListener(v -> {
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    });
+                } else if (message.equals("success edit task")) {
+                    messages.setText("Edit Task Success. Click the button below to go to the main page! ");
+                    btnDone.setOnClickListener(v -> {
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(intent);
+                        activity.finish();
                     });
                 } else if (message.equals("success update") || message.equals("success update with password")) {
                     //on not password update

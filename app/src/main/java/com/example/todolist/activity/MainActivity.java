@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.todolist.R;
 import com.example.todolist.adapter.TaskAdapter;
 import com.example.todolist.adapter.TaskAdapterApi;
+import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.GetTask;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         txtUsername = findViewById(R.id.txt_username);
         txtTanggal = findViewById(R.id.txt_tgl);
         avatar = findViewById(R.id.avatar);
+
+
 
         bottomNavigationView = findViewById(R.id.BottomNavView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);

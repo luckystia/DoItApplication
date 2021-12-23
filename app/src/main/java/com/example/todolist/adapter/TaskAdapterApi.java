@@ -55,6 +55,7 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 	private String token;
 	private Context context;
 	private Boolean active;
+	private LinearLayout emptyActive;
 
 	public TaskAdapterApi(Boolean active, Context context) {
 
@@ -63,6 +64,8 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 			this.context = context;
 			apiService =  ApiClientLocal.getClient().create(ApiService.class);
 			this.active = active;
+
+//		Toast.makeText(context, "Empty Active Task!", Toast.LENGTH_SHORT).show();
 
 		if (active){
 			getActiveData();
@@ -82,6 +85,17 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 
 	@Override
 	public void onBindViewHolder(TaskAdapterApi.TaskViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
+//		if (items.isEmpty()){
+//			Toast.makeText(context, "Empty Active Task!", Toast.LENGTH_SHORT).show();
+//		}
+
+//		if (items.get(0).getId().isEmpty()){
+//			holder.emptyActiveView.setVisibility(View.VISIBLE);
+//		}
+//
+//		holder.emptyActiveView.setVisibility(View.VISIBLE);
+
 		holder.id.setText(items.get(position).getId());
 		holder.name.setText(items.get(position).getTitle());
 
@@ -152,6 +166,7 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 		TextView id, name, date;
 		CheckBox completed;
 		LinearLayout list_row;
+		LinearLayout emptyActive;
 //		public LinearLayout.LayoutParams params;
 //		public LinearLayout rootView;
 
@@ -162,9 +177,8 @@ public class TaskAdapterApi extends RecyclerView.Adapter<TaskAdapterApi.TaskView
 			date = itemView.findViewById(R.id.date);
 			completed = itemView.findViewById(R.id.rbCompleted);
 			list_row = itemView.findViewById(R.id.list_row_item);
+			emptyActive = itemView.findViewById(R.id.emptyActiveView);
 
-//			params = new LinearLayout.LayoutParams(0, 0);
-//			rootView = itemView.findViewById(R.id.list_row_item);
 		}
 	}
 
