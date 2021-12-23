@@ -33,7 +33,7 @@ public class CustomDIalog {
             GifImageView imageView = dialog.findViewById(R.id.animateIcon);
             TextView messages = dialog.findViewById(R.id.messages);
             Button btnDone = dialog.findViewById(R.id.btnDone);
-            if (message.equals("success") || message.equals("true") || message.equals("success update") || message.equals("success update with password") || message.equals("success add task") || message.equals("success edit task")) {
+            if (message.equals("success") || message.equals("true") || message.equals("success update") || message.equals("success update with password") || message.equals("success add task") || message.equals("success edit task") || message.equals("error date")) {
 //                prvent cancel the dialog
                 dialog.setCancelable(false);
                 dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -69,6 +69,14 @@ public class CustomDIalog {
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         activity.startActivity(intent);
                         activity.finish();
+                    });
+                }else if(message.equals("error date")){
+                    imageView.setBackgroundResource(R.drawable.error_animation);
+                    messages.setText("The Date Has Passed");
+                    btnDone.setText("Close");
+                    dialog.setCanceledOnTouchOutside(false);
+                    btnDone.setOnClickListener(v -> {
+                            dismissDialog();
                     });
                 } else if (message.equals("success edit task")) {
                     messages.setText("Edit Task Success. Click the button below to go to the main page! ");

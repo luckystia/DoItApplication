@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
         txtTanggal = findViewById(R.id.txt_tgl);
         avatar = findViewById(R.id.avatar);
 
-
-
         bottomNavigationView = findViewById(R.id.BottomNavView);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ActiveTaskFragment()).commit();

@@ -18,15 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.todolist.R;
 import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.helper.DBHelper;
+import com.example.todolist.helper.DatePickerFragment;
 import com.example.todolist.helper.SessionManager;
 import com.example.todolist.model.PostPutDelTask;
 import com.example.todolist.remote.ApiClientLocal;
 import com.example.todolist.remote.ApiService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEditActivity extends AppCompatActivity {
+public class AddEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private TextView title;
     private EditText txt_id, txt_name, txt_date, txt_isi;
     private Button btn_submit, btn_cancel, btn_delete;
@@ -94,10 +98,12 @@ public class AddEditActivity extends AppCompatActivity {
         };
 
         txt_date.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            new DatePickerDialog(AddEditActivity.this, date, myCalendar
-              .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-              myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+//             TODO Auto-generated method stub
+//            new DatePickerDialog(AddEditActivity.this, date, myCalendar
+//              .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+//              myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
         });
 
         btn_submit.setOnClickListener(v -> {
@@ -323,5 +329,28 @@ public class AddEditActivity extends AppCompatActivity {
 //        }
 //    }
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+        Date now =  new Date();
+
+        if (c.getTime().before(now)){
+            customDIalog.startAlertDialog("dialog_info", "error date", R.layout.info_layout_dialog);
+        }else{
+            txt_date.setText(sdf.format(c.getTime()));
+        }
+
+//        TextView textView = (TextView) findViewById(R.id.textView);
+//        textView.setText(currentDateString);
     }
 }
