@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         sessionManager = new SessionManager(MainActivity.this);
         txtUsername = findViewById(R.id.txt_username);
         txtTanggal = findViewById(R.id.txt_tgl);
-        avatar = findViewById(R.id.image_profile);
+        avatar = findViewById(R.id.avatar);
 
 //        set Date Now
         Date c = Calendar.getInstance().getTime();

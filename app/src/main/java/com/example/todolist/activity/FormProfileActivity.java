@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.todolist.R;
 import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.helper.SessionManager;
@@ -87,9 +92,23 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
         customDIalog = new CustomDIalog(FormProfileActivity.this);
 
         String avatarUrl = sessionManager.getUserDetail().get("avatar");
-
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
         if (avatarUrl != null){
-            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+        .into(avatar);
         }
 
 
