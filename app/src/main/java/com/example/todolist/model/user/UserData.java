@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class UserData {
 
 	private String loggedToken;
+	private String avatar_url;
 
 	@SerializedName("old_password")
 	private String old_password;
@@ -26,6 +27,8 @@ public class UserData {
 
 	@SerializedName("notif_token")
 	private String notif_token;
+
+
 
 	public String getLoggedToken() {
 		return loggedToken;
@@ -85,5 +88,9 @@ public class UserData {
 
 	public String getUsername(){
 		return username;
+	}
+
+	public String getAvatar_url() {
+		return avatar_url;
 	}
 }

@@ -91,10 +91,26 @@ public class CustomDIalog {
                 imageView.setBackgroundResource(R.drawable.error_animation);
                 messages.setText(message);
                 btnDone.setText("Close");
+                dialog.setCanceledOnTouchOutside(false);
                 btnDone.setOnClickListener(v -> {
-                    dismissDialog();
+                    if (message.equals("You Are Not Logged In")) {
+                        SessionManager sessionManager = new SessionManager(activity);
+                        sessionManager.logout();
+
+                        Intent intent = new Intent(activity, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    } else {
+                        dismissDialog();
+
+                    }
 
                 });
+
+
             }
         } else if (type.equals("loading")) {
             dialog.setCanceledOnTouchOutside(false);

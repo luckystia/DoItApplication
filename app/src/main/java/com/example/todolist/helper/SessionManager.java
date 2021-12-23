@@ -20,6 +20,7 @@ public class SessionManager {
 
     private static final String IS_LOGGED_IN = "isLoggedIn";
     private static final String LOGGED_TOKEN = "loggedToken";
+    private static final String AVATAR_URL = "avatar";
     private static final String NAME = "name";
     private static final String USERNAME = "username";
     private final Context context;
@@ -38,6 +39,8 @@ public class SessionManager {
         editor.putString(LOGGED_TOKEN, userData.getLoggedToken());
         editor.putString(NAME, userData.getName());
         editor.putString(USERNAME, userData.getUsername());
+        editor.putString(AVATAR_URL, userData.getAvatar_url());
+
         editor.commit();
     }
 
@@ -46,6 +49,7 @@ public class SessionManager {
         user.put(LOGGED_TOKEN, sharedPreferences.getString(LOGGED_TOKEN, null));
         user.put(NAME, sharedPreferences.getString(NAME, null));
         user.put(USERNAME, sharedPreferences.getString(USERNAME, null));
+        user.put(AVATAR_URL, sharedPreferences.getString(AVATAR_URL, null));
 
         return user;
     }

@@ -7,6 +7,7 @@ import com.example.todolist.model.user.User;
 import com.example.todolist.model.user.UserData;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -34,8 +35,13 @@ public interface ApiService {
     //user
     @GET("api/user")
     Call<User> getUsers();
-    @PATCH("api/user/{token}")
-    Call<User> updateUser(@Path("token") String tokenLogin, @Body UserData user);
+    @Multipart
+    @POST("api/user/{token}")
+    Call<User> updateUser(@Part("name") RequestBody name,
+                          @Part("username") RequestBody username,
+                          @Part("old_password") RequestBody old_password,
+                          @Part("new_password") RequestBody new_password,
+                          @Part MultipartBody.Part avatarUrl, @Path("token") String tokenLogin);
     @PATCH("api/user/notif-api-update/{token}")
     Call<User> updateNotifToken(@Path("token") String tokenLogin,  @Body UserData user);
     @DELETE("api/user/destroy/{id}")
