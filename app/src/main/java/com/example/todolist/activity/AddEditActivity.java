@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.example.todolist.remote.ApiService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -29,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEditActivity extends AppCompatActivity {
+public class AddEditActivity extends AppCompatActivity{
     private TextView title;
     private EditText txt_id, txt_name, txt_date, txt_isi;
     private Button btn_submit, btn_cancel, btn_delete;
@@ -38,6 +40,7 @@ public class AddEditActivity extends AppCompatActivity {
     private Calendar myCalendar = Calendar.getInstance();
     private SessionManager sessionManager;
     private ApiService apiService;
+    private DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,8 @@ public class AddEditActivity extends AppCompatActivity {
         btn_delete = findViewById(R.id.btn_delete);
         btn_cancel = findViewById(R.id.btn_cancel);
         id = getIntent().getStringExtra(MainActivity.TAG_ID);
-//        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
-//        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
+        name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
+        isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
         if (id == null || id == "") {
             title.setText("Tambah Data");
@@ -182,7 +185,6 @@ public class AddEditActivity extends AppCompatActivity {
         String date = String.valueOf(txt_date.getText());
         String content = String.valueOf(txt_isi.getText());
         String token = sessionManager.getUserDetail().get("loggedToken");
-        Toast.makeText(this, date, Toast.LENGTH_SHORT).show();
         Call<PostPutDelTask> postTaskCall = apiService.postTask(token, title, date, content);
         postTaskCall.enqueue(new Callback<PostPutDelTask>() {
             @Override
@@ -256,4 +258,22 @@ public class AddEditActivity extends AppCompatActivity {
             }
         });
     }
+
+//    private void showDatePickerDialog(){
+//        DatePickerDialog datePickerDialog = new DatePickerDialog(
+//          this, this,
+//          Calendar.getInstance().get(Calendar.YEAR),
+//          Calendar.getInstance().get(Calendar.MONTH),
+//          Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+//        );
+//        datePickerDialog.show();
+//    }
+//
+//    @Override
+//    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+//        String date = String.valueOf(i2) + "-" + String.valueOf(i1) + "-" + String.valueOf(i);
+//        if (new SimpleDateFormat("MM/yyyy").parse(date).before(new Date())) {
+//
+//        }
+//    }
 }

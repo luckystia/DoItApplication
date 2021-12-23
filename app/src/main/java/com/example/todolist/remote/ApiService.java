@@ -49,8 +49,11 @@ public interface ApiService {
 
 
     //task
-    @GET("api/get-task")
-    Call<GetTask> getTasks(@Header("Token-Login") String token);
+    @GET("api/task-active")
+    Call<GetTask> getTasksActive(@Header("Token-Login") String token);
+
+    @GET("api/task-completed")
+    Call<GetTask> getTasksCompleted(@Header("Token-Login") String token);
 
 
 
@@ -77,7 +80,7 @@ public interface ApiService {
     @FormUrlEncoded
     @PUT("api/task")
     Call<PostPutDelTask> putTask(@Header("Token-Login") String token,
-                                    @Field("id") String id,
+                                 @Field("id") String id,
                                  @Field("title") String title,
                                  @Field("date") String date,
                                  @Field("content") String content);
