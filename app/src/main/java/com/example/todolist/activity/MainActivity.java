@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.todolist.R;
 import com.example.todolist.adapter.RecyclerItemClickListener;
 import com.example.todolist.adapter.TaskAdapter;
@@ -34,6 +36,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG_ID = "id";
@@ -41,12 +45,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_DATE = "date";
     public static final String TAG_ISI = "isi";
     private RecyclerView recyclerView;
+    private CircleImageView avatar;
+    private LinearLayout profileDisplay;
     private AlertDialog.Builder dialog;
     private final ArrayList<TaskData> itemList = new ArrayList<>();
     private TaskAdapter adapter;
     private DBHelper SQLite = new DBHelper(this);
     private TextView txtUsername, txtTanggal;
     private FloatingActionButton fab;
+    private   String avatarUrl;
     private SessionManager sessionManager;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -55,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        profileDisplay = findViewById(R.id.profileDisplay);
         sessionManager = new SessionManager(MainActivity.this);
         txtUsername = findViewById(R.id.txt_username);
         txtTanggal = findViewById(R.id.txt_tgl);
+        avatar = findViewById(R.id.image_profile);
 
 //        set Date Now
         Date c = Calendar.getInstance().getTime();
@@ -73,10 +82,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
-        txtUsername.setOnClickListener(v -> {
+        profileDisplay.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, FormProfileActivity.class));
         });
+         avatarUrl = sessionManager.getUserDetail().get("avatar");
 
+        if (avatarUrl != null){
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+        }
         fab = findViewById(R.id.floatPlus);
         recyclerView = findViewById(R.id.list);
         recyclerView.addOnItemTouchListener(
@@ -149,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
+        avatarUrl = sessionManager.getUserDetail().get("avatar");
+        if (avatarUrl != null){
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+        }
         itemList.clear();
         getAllData();
     }

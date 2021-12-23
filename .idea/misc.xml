@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2234375" />
+        <entry key="app/src/main/res/drawable/ic_baseline_account_circle_blue.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/font/font.xml" value="0.2484375" />
         <entry key="app/src/main/res/layout/activity_add_edit.xml" value="0.30833333333333335" />
         <entry key="app/src/main/res/layout/activity_add_edit_remake.xml" value="0.2140625" />

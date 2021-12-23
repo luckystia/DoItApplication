@@ -70,15 +70,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:fontFamily="@font/poppins_regular"
-            android:src="@drawable/ic_baseline_account_circle_24"
-            android:text="avatar"
-            android:textColor="#7E7E7E"
-            android:textSize="12sp"
+            android:src="@drawable/ic_baseline_account_circle_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
