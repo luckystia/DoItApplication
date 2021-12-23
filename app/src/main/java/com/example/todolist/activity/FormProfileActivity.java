@@ -165,8 +165,8 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
 
             if (changePasswordSection.getVisibility() == View.VISIBLE)
                 user.setOld_password(inputOldPassword.getText().toString().trim());
-            user.setNew_password(inputNewPassword.getText().toString().trim());
-            updateUser(sessionManager.getUserDetail().get("loggedToken"), user);
+                user.setNew_password(inputNewPassword.getText().toString().trim());
+                updateUser(sessionManager.getUserDetail().get("loggedToken"), user);
             }
         });
 
@@ -177,7 +177,8 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
         String filePath = null;
         File file = null;
         MultipartBody.Part body;
-
+        RequestBody old_password = null;
+        RequestBody  new_password = null;
         if (uri != null){
             filePath = getRealPathFromURIPath(uri,FormProfileActivity.this);
             file = new File(filePath);
@@ -188,18 +189,21 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
             RequestBody mFile = RequestBody.create(MultipartBody.FORM,"");
             body = MultipartBody.Part.createFormData("avatarUrl","",mFile);
         }
-        
+
         RequestBody fullName =
                 RequestBody.create(MediaType.parse("multipart/form-data"), user.getName());
 
         RequestBody username =
                 RequestBody.create(MediaType.parse("multipart/form-data"), user.getUsername());
 
-        RequestBody old_password =
-                RequestBody.create(MediaType.parse("multipart/form-data"), user.getOld_password() != null ? user.getOld_password() : "");
+        if (changePasswordSection.getVisibility() == View.VISIBLE){
+             old_password =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), user.getOld_password());
 
-        RequestBody new_password =
-                RequestBody.create(MediaType.parse("multipart/form-data"), user.getNew_password() != null ? user.getNew_password() : "");
+             new_password =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), user.getNew_password());
+        }
+
         Call<User> call = apiService.updateUser(fullName, username, old_password, new_password, body, tokenLogin);
         call.enqueue(new Callback<User>() {
             @Override
@@ -381,11 +385,5 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
                 .setAspectRatio(1, 1)
                 .start(this);
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == REQUEST_IMAGE && resultCode == RESULT_OK){
-//            uri = data.getData();
-//        }
-//    }
+
 }
