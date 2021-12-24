@@ -1,5 +1,6 @@
 package com.example.todolist.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.todolist.R;
 import com.example.todolist.adapter.TaskAdapter;
@@ -50,11 +52,12 @@ public class CompletedTaskFragment extends Fragment {
 	private TaskAdapterApi mAdapter;
 	public static MainActivity ma;
 
+	@SuppressLint("ResourceAsColor")
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.completed_task_fragment, container, false);
-
+		final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
 		sessionManager = new SessionManager(getContext());
 
 		recyclerView = view.findViewById(R.id.listCompleted);
@@ -66,6 +69,15 @@ public class CompletedTaskFragment extends Fragment {
 //			refresh();
 			mAdapter = new TaskAdapterApi(false, getContext());
 			recyclerView.setAdapter(mAdapter);
+
+			pullToRefresh.setColorSchemeColors(R.color.dark_blue);
+			pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+				@Override
+				public void onRefresh() {
+					mAdapter.getCompletedData();
+					pullToRefresh.setRefreshing(false);
+				}
+			});
 		}
 		return view;
 	}

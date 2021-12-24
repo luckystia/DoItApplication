@@ -19,12 +19,12 @@
         android:elevation="12dp">
 
         <ImageButton
+            android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            android:src="@drawable/back"
             android:background="@null"
             app:tint="@color/white" />
-
 
         <TextView
             android:id="@+id/title"
@@ -110,7 +110,7 @@
             android:padding="20dp"
             android:singleLine="true"
             android:focusable="false"
-            android:drawableEnd="@drawable/icon_date"
+            android:drawableEnd="@drawable/date"
             android:textColor="#0A62FF"
             android:textSize="12sp"
             app:layout_constraintTop_toBottomOf="@+id/tanggal" />

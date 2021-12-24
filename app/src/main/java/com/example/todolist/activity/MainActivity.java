@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, FormProfileActivity.class));
         });
          avatarUrl = sessionManager.getUserDetail().get("avatar");
-
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
         if (avatarUrl != null){
             Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
         }
@@ -202,6 +203,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 //        setUserData();
         txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
+
+        avatarUrl = sessionManager.getUserDetail().get("avatar");
+        if (avatarUrl != null){
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+        }
+
         itemList.clear();
 //        getAllData();
     }

@@ -1,8 +1,8 @@
 package com.example.todolist.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,62 +13,65 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.todolist.R;
 import com.example.todolist.adapter.TaskAdapter;
 import com.example.todolist.adapter.TaskAdapterApi;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
-import com.example.todolist.model.GetTask;
-import com.example.todolist.model.Task;
 import com.example.todolist.model.TaskData;
 import com.example.todolist.remote.ApiClientLocal;
 import com.example.todolist.remote.ApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ActiveTaskFragment extends Fragment {
 
-	private RecyclerView recyclerView;
-	private AlertDialog.Builder dialog;
-	private final ArrayList<TaskData> itemList = new ArrayList<>();
-	private TaskAdapter adapter;
-	private DBHelper SQLite = new DBHelper(getContext());
-	private TextView txtUsername, txtTanggal;
-	private FloatingActionButton fab;
-	private SessionManager sessionManager;
+    public static MainActivity ma;
+    private final ArrayList<TaskData> itemList = new ArrayList<>();
+    ApiService mApiService;
+    private RecyclerView recyclerView;
+    private AlertDialog.Builder dialog;
+    private TaskAdapter adapter;
+    private final DBHelper SQLite = new DBHelper(getContext());
+    private TextView txtUsername, txtTanggal;
+    private FloatingActionButton fab;
+    private SessionManager sessionManager;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private TaskAdapterApi mAdapter;
 
+    @SuppressLint("ResourceAsColor")
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.active_task_fragment, container, false);
+        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
 
-	ApiService mApiService;
-	private RecyclerView.LayoutManager mLayoutManager;
-	private TaskAdapterApi mAdapter;
-	public static MainActivity ma;
+        sessionManager = new SessionManager(getContext());
 
-	@Nullable
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.active_task_fragment, container, false);
+        recyclerView = view.findViewById(R.id.listActive);
 
-		sessionManager = new SessionManager(getContext());
-
-		recyclerView = view.findViewById(R.id.listActive);
-
-		mLayoutManager = new LinearLayoutManager(getContext());
-		recyclerView.setLayoutManager(mLayoutManager);
-		mApiService = ApiClientLocal.getClient().create(ApiService.class);
-		if (sessionManager.isLoggedIn() == true) {
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        mApiService = ApiClientLocal.getClient().create(ApiService.class);
+        if (sessionManager.isLoggedIn() == true) {
 //			refresh();
-			mAdapter = new TaskAdapterApi(true, getContext());
-			recyclerView.setAdapter(mAdapter);
-		}
-		return view;
-	}
+            mAdapter = new TaskAdapterApi(true, getContext());
+            recyclerView.setAdapter(mAdapter);
+
+            pullToRefresh.setColorSchemeColors(R.color.dark_blue);
+            pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mAdapter.getActiveData();
+                    pullToRefresh.setRefreshing(false);
+                }
+            });
+        }
+        return view;
+    }
 
 //	public void refresh() {
 //		Call<GetTask> kontakCall = mApiService.getTasksActive(sessionManager.getUserDetail().get("loggedToken"));

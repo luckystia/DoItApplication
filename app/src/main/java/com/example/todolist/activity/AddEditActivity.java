@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,6 @@ import com.example.todolist.remote.ApiClientLocal;
 import com.example.todolist.remote.ApiService;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,18 +41,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class AddEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private TextView title;
     private EditText txt_id, txt_name, txt_date, txt_isi;
     private Button btn_submit, btn_cancel, btn_delete;
-    private DBHelper SQLite = new DBHelper(this);
+    private final DBHelper SQLite = new DBHelper(this);
     private String id, name, isi, date;
-    private Calendar myCalendar = Calendar.getInstance();
+    private final Calendar myCalendar = Calendar.getInstance();
     private SessionManager sessionManager;
     private ApiService apiService;
     private DatePickerDialog datePickerDialog;
     private CustomDIalog customDIalog;
     private Dialog dialog;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
         name = getIntent().getStringExtra(MainActivity.TAG_TITLE);
         isi = getIntent().getStringExtra(MainActivity.TAG_CONTENT);
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
+        backButton = findViewById(R.id.backBtn);
+
         if (id == null || id == "") {
             title.setText("Tambah Data");
             btn_delete.setVisibility(View.GONE);
@@ -88,6 +91,10 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
             txt_date.setText(date);
             btn_submit.setText("Edit Task");
         }
+
+        backButton.setOnClickListener(v -> {
+            onBackPressed();
+        });
 
         DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
             // TODO Auto-generated method stub
@@ -176,16 +183,16 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
     // Save data to SQLite database
     private void saveSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
-          String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("") ||
-          String.valueOf(txt_isi.getText()) == null || String.valueOf(txt_isi.getText()).equals("")
+                String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("") ||
+                String.valueOf(txt_isi.getText()) == null || String.valueOf(txt_isi.getText()).equals("")
         ) {
             Toast.makeText(getApplicationContext(),
-              "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
+                    "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
         } else {
             SQLite.insertTask(
-              txt_name.getText().toString().trim(),
-              txt_date.getText().toString().trim(),
-              txt_isi.getText().toString().trim());
+                    txt_name.getText().toString().trim(),
+                    txt_date.getText().toString().trim(),
+                    txt_isi.getText().toString().trim());
         }
     }
 
@@ -231,15 +238,15 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
     // Update data in SQLite database
     private void editSQLite() {
         if (String.valueOf(txt_name.getText()) == null || String.valueOf(txt_name.getText()).equals("") ||
-          String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("")) {
+                String.valueOf(txt_date.getText()) == null || String.valueOf(txt_date.getText()).equals("")) {
             Toast.makeText(getApplicationContext(),
-              "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
+                    "Inputan tidak boleh kosong ...", Toast.LENGTH_SHORT).show();
         } else {
             SQLite.updateTask(
-              Integer.parseInt(txt_id.getText().toString().trim()),
-              txt_name.getText().toString().trim(),
-              txt_date.getText().toString().trim(),
-              txt_isi.getText().toString().trim()
+                    Integer.parseInt(txt_id.getText().toString().trim()),
+                    txt_name.getText().toString().trim(),
+                    txt_date.getText().toString().trim(),
+                    txt_isi.getText().toString().trim()
             );
 //            blank();
 //            finish();
@@ -342,11 +349,11 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
         String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
-        Date now =  new Date();
+        Date now = new Date();
 
-        if (c.getTime().before(now)){
+        if (c.getTime().before(now)) {
             customDIalog.startAlertDialog("dialog_info", "error date", R.layout.info_layout_dialog);
-        }else{
+        } else {
             txt_date.setText(sdf.format(c.getTime()));
         }
 

@@ -18,5 +18,6 @@
     <color name="oranye">#FBD127</color>
     <color name="bg_kuning">#F7DC6F</color>
     <color name="bg_white">#F5F7FB</color>
+    <color name="dark_blue">#0A62FF</color>
 
 </resources>
