@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.about:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                builder1.setMessage("Nama : Luckystia Mafasani Ulfa\nNIM : 1905551048");
+                builder1.setMessage("Kelompok 13");
                 builder1.setTitle("ABOUT APP");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
