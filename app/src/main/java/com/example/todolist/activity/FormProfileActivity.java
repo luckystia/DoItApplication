@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -55,7 +55,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FormProfileActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+public class FormProfileActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+    public static final int REQUEST_IMAGE = 100;
     private final UserData user = new UserData();
     private EditText inputName, inputUsername, inputOldPassword, inputNewPassword;
     private TextView btnChangePassword, showOldPwd, showNewPwd;
@@ -64,7 +65,6 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
     private ImageView avatar;
     private SessionManager sessionManager;
     private ApiService apiService;
-    public static final int REQUEST_IMAGE = 100;
     private Uri uri;
     private Button btnSubmit;
     private Drawable img;
@@ -89,12 +89,17 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
         apiService = ApiUtils.getUsetService();
         btnSubmit = findViewById(R.id.btn_submit);
 
+        //check is login
+        if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()) {
+            moveToLogin();
+        }
+
         customDIalog = new CustomDIalog(FormProfileActivity.this);
 
         String avatarUrl = sessionManager.getUserDetail().get("avatar");
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
-        if (avatarUrl != null){
-            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl)
+        if (avatarUrl != null) {
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/" + avatarUrl)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -108,35 +113,35 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
                             return false;
                         }
                     })
-        .into(avatar);
+                    .into(avatar);
         }
 
 
-        avatar.setOnClickListener(v ->{
-            if(EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        avatar.setOnClickListener(v -> {
+            if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 CropImage.startPickImageActivity(FormProfileActivity.this);
 
-            }else{
-                EasyPermissions.requestPermissions(this,"Izinkan Aplikasi Mengakses Storage?",REQUEST_IMAGE,Manifest.permission.READ_EXTERNAL_STORAGE);
+            } else {
+                EasyPermissions.requestPermissions(this, "Izinkan Aplikasi Mengakses Storage?", REQUEST_IMAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
 
 
         });
         showOldPwd.setOnClickListener(v -> {
-            if (inputOldPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+            if (inputOldPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
                 inputOldPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 showOldPwd.setText("Hide Password");
-            }else{
+            } else {
                 showOldPwd.setText("Show Password");
                 inputOldPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         });
 
         showNewPwd.setOnClickListener(v -> {
-            if (inputNewPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+            if (inputNewPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
                 inputNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 showNewPwd.setText("Hide Password");
-            }else{
+            } else {
                 showNewPwd.setText("Show Password");
                 inputNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
@@ -178,17 +183,24 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
             Boolean isAllFieldsChecked = CheckAllFields();
             if (isAllFieldsChecked) {
 
-            customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
-            user.setName(inputName.getText().toString());
-            user.setUsername(inputUsername.getText().toString());
+                customDIalog.startAlertDialog("loading", "loading", R.layout.custom_dialog_loading);
+                user.setName(inputName.getText().toString());
+                user.setUsername(inputUsername.getText().toString());
 
-            if (changePasswordSection.getVisibility() == View.VISIBLE)
-                user.setOld_password(inputOldPassword.getText().toString().trim());
+                if (changePasswordSection.getVisibility() == View.VISIBLE)
+                    user.setOld_password(inputOldPassword.getText().toString().trim());
                 user.setNew_password(inputNewPassword.getText().toString().trim());
                 updateUser(sessionManager.getUserDetail().get("loggedToken"), user);
             }
         });
 
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(FormProfileActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
     private void updateUser(String tokenLogin, UserData user) {
@@ -197,16 +209,16 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
         File file = null;
         MultipartBody.Part body;
         RequestBody old_password = null;
-        RequestBody  new_password = null;
-        if (uri != null){
-            filePath = getRealPathFromURIPath(uri,FormProfileActivity.this);
+        RequestBody new_password = null;
+        if (uri != null) {
+            filePath = getRealPathFromURIPath(uri, FormProfileActivity.this);
             file = new File(filePath);
 
-            RequestBody mFile = RequestBody.create(MediaType.parse("image/*"),file); //membungkus file ke dalam request body
-            body = MultipartBody.Part.createFormData("avatarUrl",file.getName(),mFile); // membuat formdata multipart berisi request body
-        }else{
-            RequestBody mFile = RequestBody.create(MultipartBody.FORM,"");
-            body = MultipartBody.Part.createFormData("avatarUrl","",mFile);
+            RequestBody mFile = RequestBody.create(MediaType.parse("image/*"), file); //membungkus file ke dalam request body
+            body = MultipartBody.Part.createFormData("avatarUrl", file.getName(), mFile); // membuat formdata multipart berisi request body
+        } else {
+            RequestBody mFile = RequestBody.create(MultipartBody.FORM, "");
+            body = MultipartBody.Part.createFormData("avatarUrl", "", mFile);
         }
 
         RequestBody fullName =
@@ -215,11 +227,11 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
         RequestBody username =
                 RequestBody.create(MediaType.parse("multipart/form-data"), user.getUsername());
 
-        if (changePasswordSection.getVisibility() == View.VISIBLE){
-             old_password =
+        if (changePasswordSection.getVisibility() == View.VISIBLE) {
+            old_password =
                     RequestBody.create(MediaType.parse("multipart/form-data"), user.getOld_password());
 
-             new_password =
+            new_password =
                     RequestBody.create(MediaType.parse("multipart/form-data"), user.getNew_password());
         }
 
@@ -303,7 +315,7 @@ public class FormProfileActivity extends AppCompatActivity implements EasyPermis
             inputUsername.setError("Username can't have a blank space & have minimal 6 characters and max 11 charaters");
             return false;
         }
-        if (changePasswordSection.getVisibility() == View.VISIBLE){
+        if (changePasswordSection.getVisibility() == View.VISIBLE) {
             if (inputOldPassword.getText().toString().trim().length() == 0) {
                 inputOldPassword.setError("This field is required");
                 return false;

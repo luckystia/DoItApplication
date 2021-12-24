@@ -80,6 +80,11 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
         date = getIntent().getStringExtra(MainActivity.TAG_DATE);
         backButton = findViewById(R.id.backBtn);
 
+        //check is login
+        if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()) {
+      moveToLogin();
+        }
+
         if (id == null || id == "") {
             title.setText("Tambah Data");
             btn_delete.setVisibility(View.GONE);
@@ -146,6 +151,13 @@ public class AddEditActivity extends AppCompatActivity implements DatePickerDial
                 startAlertDialog("dialog_info", "delete confirm", R.layout.confirm_layout_dialog);
             }
         });
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(AddEditActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
     @Override

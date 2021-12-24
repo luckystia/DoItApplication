@@ -5,15 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,13 +24,9 @@ import com.bumptech.glide.Glide;
 import com.example.todolist.R;
 import com.example.todolist.adapter.TaskAdapter;
 import com.example.todolist.adapter.TaskAdapterApi;
-import com.example.todolist.helper.CustomDIalog;
 import com.example.todolist.helper.DBHelper;
 import com.example.todolist.helper.SessionManager;
-import com.example.todolist.model.GetTask;
-import com.example.todolist.model.Task;
 import com.example.todolist.model.TaskData;
-import com.example.todolist.remote.ApiClientLocal;
 import com.example.todolist.remote.ApiService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,11 +37,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,25 +48,41 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_ISI = "isi";
     public static final String TAG_CONTENT = "isi";
     public static final String TAG_TITLE = "name";
+    public static MainActivity ma;
+    private final ArrayList<TaskData> itemList = new ArrayList<>();
     TaskAdapterApi mAdapter;
     ImageView imageEditProfile;
-
     ApiService mApiService;
     private RecyclerView.LayoutManager mLayoutManager;
-    public static MainActivity ma;
-
     private RecyclerView recyclerView;
     private CircleImageView avatar;
     private LinearLayout profileDisplay;
     private AlertDialog.Builder dialog;
-    private final ArrayList<TaskData> itemList = new ArrayList<>();
     private TaskAdapter adapter;
     private DBHelper SQLite = new DBHelper(this);
     private TextView txtUsername, txtTanggal;
     private FloatingActionButton fab;
-    private   String avatarUrl;
+    private String avatarUrl;
     private SessionManager sessionManager;
     private BottomNavigationView bottomNavigationView;
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+
+            switch (item.getItemId()) {
+                case R.id.activeTask:
+                    selectedFragment = new ActiveTaskFragment();
+                    break;
+                case R.id.completedTask:
+                    selectedFragment = new CompletedTaskFragment();
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
+            return true;
+        }
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ActiveTaskFragment()).commit();
 
+
 //        set Date Now
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         if (sessionManager.isLoggedIn() == false || sessionManager.getUserDetail().get("loggedToken").isEmpty()) {
             moveToLogin();
         }
+
+        moveToDetailItemNotif();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
@@ -113,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
         profileDisplay.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, FormProfileActivity.class));
         });
-         avatarUrl = sessionManager.getUserDetail().get("avatar");
+        avatarUrl = sessionManager.getUserDetail().get("avatar");
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress);
-        if (avatarUrl != null){
-            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+        if (avatarUrl != null) {
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/" + avatarUrl).into(avatar);
         }
         fab = findViewById(R.id.floatPlus);
         recyclerView = findViewById(R.id.listCompleted);
@@ -205,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
         txtUsername.setText("Hello, " + sessionManager.getUserDetail().get("username"));
 
         avatarUrl = sessionManager.getUserDetail().get("avatar");
-        if (avatarUrl != null){
-            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/"+avatarUrl).into(avatar);
+        if (avatarUrl != null) {
+            Glide.with(this).load("http://apitodolistfix.menkz.xyz/storage/" + avatarUrl).into(avatar);
         }
 
         itemList.clear();
@@ -218,6 +225,26 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.option_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+//    public void refresh() {
+//        Call<GetTask> kontakCall = mApiService.getTasks(sessionManager.getUserDetail().get("loggedToken"));
+//        kontakCall.enqueue(new Callback<GetTask>() {
+//            @Override
+//            public void onResponse(Call<GetTask> call, Response<GetTask>
+//              response) {
+//                List<Task> KontakList = response.body().getListDataTask();
+//                Log.d("Retrofit Get", "Jumlah data Kontak: " +
+//                  String.valueOf(KontakList.size()));
+//                mAdapter = new TaskAdapterApi(KontakList);
+//                recyclerView.setAdapter(mAdapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<GetTask> call, Throwable t) {
+//                Log.e("Retrofit Get", t.toString());
+//            }
+//        });
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -251,63 +278,31 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    public void refresh() {
-//        Call<GetTask> kontakCall = mApiService.getTasks(sessionManager.getUserDetail().get("loggedToken"));
-//        kontakCall.enqueue(new Callback<GetTask>() {
-//            @Override
-//            public void onResponse(Call<GetTask> call, Response<GetTask>
-//              response) {
-//                List<Task> KontakList = response.body().getListDataTask();
-//                Log.d("Retrofit Get", "Jumlah data Kontak: " +
-//                  String.valueOf(KontakList.size()));
-//                mAdapter = new TaskAdapterApi(KontakList);
-//                recyclerView.setAdapter(mAdapter);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<GetTask> call, Throwable t) {
-//                Log.e("Retrofit Get", t.toString());
-//            }
-//        });
-//    }
+    private void moveToDetailItemNotif() {
+        //get notification data info
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String value = bundle.getString("id");
+            if (value != null) {
+//                Toast.makeText(MainActivity.this, String.valueOf(bundle.hashCode()), Toast.LENGTH_SHORT).show();
+                String id = bundle.getString("id");
+                String title = bundle.getString("title");
+                String date = bundle.getString("date");
+                String content = bundle.getString("content");
 
-            switch (item.getItemId()){
-                case R.id.activeTask:
-                    selectedFragment = new ActiveTaskFragment();
-                    break;
-                case R.id.completedTask:
-                    selectedFragment = new CompletedTaskFragment();
-                    break;
+                Intent intent = new Intent(this, AddEditActivity.class);
+                intent.putExtra(MainActivity.TAG_ID, id);
+                intent.putExtra(MainActivity.TAG_TITLE, title);
+                intent.putExtra(MainActivity.TAG_DATE, date);
+                intent.putExtra(MainActivity.TAG_CONTENT, content);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-
-            return true;
         }
-    };
 
 
-
-//    private void getCurrentFirebaseToken(){
-//        FirebaseInstanceId.getInstance().getInstanceId()
-//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w("TAG", "getInstanceId failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new Instance ID token
-//                        String token = task.getResult().getToken();
-//
-//
-//                        Toast.makeText(MainActivity.this, token.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+    }
 }
