@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/icon2.xml" value="0.22" />
+        <entry key="app/src/main/res/drawable-v24/icon_launcher.xml" value="0.5" />
+        <entry key="app/src/main/res/drawable/ic_assessment.xml" value="0.14479166666666668" />
         <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2234375" />
         <entry key="app/src/main/res/drawable/ic_baseline_account_circle_blue.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/font/font.xml" value="0.2484375" />
@@ -14,6 +17,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3072916666666667" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.3072916666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.19479166666666667" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.2109375" />
         <entry key="app/src/main/res/layout/alert_dialog.xml" value="0.20729166666666668" />
         <entry key="app/src/main/res/layout/completed_task_fragment.xml" value="0.21458333333333332" />
         <entry key="app/src/main/res/layout/custom_dialog_loading.xml" value="0.13134057971014493" />
@@ -22,6 +26,8 @@
         <entry key="app/src/main/res/layout/register_activity.xml" value="0.2" />
         <entry key="app/src/main/res/menu/bottom_nav.xml" value="0.1" />
         <entry key="app/src/main/res/menu/option_menu.xml" value="0.25" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22" />
       </map>
     </option>
   </component>
