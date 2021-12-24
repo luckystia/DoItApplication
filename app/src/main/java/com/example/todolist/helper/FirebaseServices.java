@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.todolist.R;
+import com.example.todolist.activity.AddEditActivity;
 import com.example.todolist.activity.MainActivity;
 import com.example.todolist.activity.RegisterActivity;
 import com.example.todolist.model.user.User;
@@ -44,23 +45,35 @@ public class FirebaseServices extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
+        String id = "0";
+        String title = "0";
+        String date = "0";
+        String content = "0";
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            id = remoteMessage.getData().get("id");
+            title = remoteMessage.getData().get("title");
+            date = remoteMessage.getData().get("date");
+            content = remoteMessage.getData().get("content");
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getBody(), id, title,date, content);
         }
 
     }
 
     // [END receive_message]
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(String messageBody, String id, String title, String date, String content) {
+        Intent intent = new Intent(this, AddEditActivity.class);
+        intent.putExtra(MainActivity.TAG_ID, id);
+        intent.putExtra(MainActivity.TAG_TITLE, title);
+        intent.putExtra(MainActivity.TAG_DATE, date);
+        intent.putExtra(MainActivity.TAG_CONTENT, content);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
